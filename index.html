@@ -22,17 +22,17 @@
     }
     }
 
-    .ql-formats {
+   /* .ql-formats {
         display: block !important;
-    }
+    }*/
 
-    .ql-toolbar {
+   /* .ql-toolbar {
         box-shadow: inset -1px -1px 100px 100px white;
-    }
+    }*/
 
-    .ql-container {
+    /*.ql-container {
         margin-top: 30px;
-    }
+    }*/
 
     .ql-editor {
         font-family: Arial !important;
@@ -42,13 +42,47 @@
         content: attr(data-placeholder);
     }
 
-    .ql-toolbar button {
+    /*.ql-toolbar button {
         width: 150px !important;
         text-align:left!important;
+    }*/
+
+    img {
+        width:30%!important;
+        height:30%!important;
+    }
+
+    .ql-contextmenu-btn {
+        background-color: white;
+        z-index: 10000;
+        width: 150px;
+        text-align:left;
+        float:none;
+        display:block;
+        border:none;
+    }
+
+    .section-header{
+        margin-top:30px;
     }
 </style>
 <!-- Create the editor container -->
-<div id="editor">
+<p class="section-header" contenteditable='false'><strong style='color: rgb(178, 107, 0); font-size: 16px;'>Version</strong></p>
+<div id="editor"></div>
+
+<p class="section-header" contenteditable='false'><strong style='color: rgb(178, 107, 0); font-size: 16px;'>Date</strong></p>
+<div id="editor2"></div>
+<p class="section-header" contenteditable='false'><strong style='color: rgb(178, 107, 0); font-size: 16px;'>Summary</strong></p>
+<div id="editor3"></div>
+<p class="section-header" contenteditable='false'><strong style='color: rgb(178, 107, 0); font-size: 16px;'>Technical Background</strong></p>
+<div id="editor4"></div>
+<p class="section-header"  contenteditable='false'><strong style='color: rgb(178, 107, 0); font-size: 16px;'>Resolution</strong></p>
+<div id="editor5"></div>
+
+<div class="ql-contextmenu">
+    @*<button class="ql-contextmenu-btn">Insert Image Here</button>*@
+    <button class="ql-contextmenu-btn">Show Mockup</button>
+    <button class="ql-contextmenu-btn">Generate KBI</button>
 </div>
 <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 <!-- Include the Quill library -->
@@ -68,6 +102,9 @@
     ];
     Quill.register(Size, true);
     var toolbarOptions = [
+        ['image'],
+       // ['preview'],
+      //  ['generate'],
         ['bold'],        // toggled buttons
         [{
             'size': ["10px",
@@ -76,12 +113,38 @@
                 "16px"]
         }],  // custom dropdown
         [{ 'color': [] }],
-        ['image'],
-        ['preview'],
-        ['generate']
+        
     ];
 
     var quill = new Quill('#editor', {
+        modules: {
+            toolbar: toolbarOptions
+        },
+        placeholder: 'Your text here...',
+        theme: 'snow'
+    });
+      var quill2 = new Quill('#editor2', {
+        modules: {
+            toolbar: toolbarOptions
+        },
+        placeholder: 'Your text here...',
+        theme: 'snow'
+      });
+      var quill3 = new Quill('#editor3', {
+        modules: {
+            toolbar: toolbarOptions
+        },
+        placeholder: 'Your text here...',
+        theme: 'snow'
+      });
+      var quill4 = new Quill('#editor4', {
+        modules: {
+            toolbar: toolbarOptions
+        },
+        placeholder: 'Your text here...',
+        theme: 'snow'
+      });
+      var quill5 = new Quill('#editor5', {
         modules: {
             toolbar: toolbarOptions
         },
@@ -93,40 +156,40 @@
     toolbar.addHandler('preview', function () {
         console.log('preview')
     });
-    var previewBtn = document.querySelector('.ql-image');
-    previewBtn.innerHTML = "Insert Image Here.";
-    var previewBtn = document.querySelector('.ql-preview');
-    previewBtn.innerHTML = "Show Mockup";
-    previewBtn.addEventListener('click', function () {
-        var x = "height=800px,width=800px;toolbar=0,location=50,menubar=0";
-        console.log(x);
-        var w = window.open('', '_blank', x);
-        //var w = window.open('new.html','_blank');
-        w.document.writeln(quill.container.firstChild.innerHTML);
+    //var previewBtn = document.querySelector('.ql-image');
+    //previewBtn.innerHTML = "Insert Image Here.";
+    //var previewBtn = document.querySelector('.ql-preview');
+    //previewBtn.innerHTML = "Show Mockup";
+    //previewBtn.addEventListener('click', function () {
+    //    var x = "height=800px,width=800px;toolbar=0,location=50,menubar=0";
+    //    console.log(x);
+    //    var w = window.open('', '_blank', x);
+    //    //var w = window.open('new.html','_blank');
+    //    w.document.writeln(quill.container.firstChild.innerHTML);
 
-    });
+    //});
 
-    var generateBtn = document.querySelector('.ql-generate');
-    generateBtn.innerHTML = "Generate KBI";
-    generateBtn.addEventListener('click', function () {
-        var images = img_find();
-        var html = quill.container.firstChild.innerHTML;
-        const fd = new FormData();
-        fd.append('Html', html);
-        fd.append('Images', images);
+    //var generateBtn = document.querySelector('.ql-generate');
+    //generateBtn.innerHTML = "Generate KBI";
+    //generateBtn.addEventListener('click', function () {
+    //    var images = img_find();
+    //    var html = quill.container.firstChild.innerHTML;
+    //    const fd = new FormData();
+    //    fd.append('Html', html);
+    //    fd.append('Images', images);
 
-        const xhr = new XMLHttpRequest();
-        xhr.open('POST', 'https://c569-184-22-219-255.ngrok-free.app/api/kbi/upload/', true);
-        xhr.onload = () => {
-            if (xhr.status === 200) {
-                var x = JSON.parse(xhr.response);
-                window.open(x.file.url);
-                 location.reload();
-            }
-        };
-        xhr.send(fd);
+    //    const xhr = new XMLHttpRequest();
+    //    xhr.open('POST', 'https://c569-184-22-219-255.ngrok-free.app/api/kbi/upload/', true);
+    //    xhr.onload = () => {
+    //        if (xhr.status === 200) {
+    //            var x = JSON.parse(xhr.response);
+    //            window.open(x.file.url);
+    //             location.reload();
+    //        }
+    //    };
+    //    xhr.send(fd);
 
-    });
+    //});
 
     function selectLocalImage() {
         const input = document.createElement('input');
@@ -145,6 +208,7 @@
             }
         };
     }
+
 
     /**
      * Step2. save to server
@@ -182,33 +246,35 @@
         quill.insertEmbed(range.index, 'image', url);
     }
 
-    //// quill editor add image handler
-   // quill.getModule('toolbar').addHandler('image', () => {
-   //     selectLocalImage();
+    // quill editor add image handler
+    //quill.getModule('toolbar').addHandler('image', (x) => {
+     //   console.log(x);
+   //     selectLocalImageAsData();
+        //selectLocalImage();
    // });
 
-    quill.pasteHTML("<p contenteditable='false'><strong style='color: rgb(178, 107, 0); font-size: 16px;'>Version</strong></p>" +
-        "<p style='left:50px;'>Your text here<br><br><br><br></p>" +
-        "<p><strong style='color: rgb(178, 107, 0); font-size: 16px;'>Date</strong></p>" +
-        "<p>Your text here<br><br><br><br></p>" +
-        "<p><strong style='color: rgb(178, 107, 0); font-size: 16px;'>Summary</strong></p>" +
-        "<p>Your text here<br><br><br><br></p>" +
-        "<p><strong style='color: rgb(178, 107, 0); font-size: 16px;'>Technical Background</strong></p>" +
-        "<p>Your text here<br><br><br><br></p>" +
-        "<p><strong style='color: rgb(178, 107, 0); font-size: 16px;'>Resolution</strong></p>" +
-        "<p class='x'>Your text here<br><br><br><br></p>"
-    );
+    //quill.pasteHTML(
+    //    "<p style='left:50px;'>Your text here<br><br><br><br></p>" +
+    //    "<p><strong style='color: rgb(178, 107, 0); font-size: 16px;'>Date</strong></p>" +
+    //    "<p>Your text here<br><br><br><br></p>" +
+    //    "<p><strong style='color: rgb(178, 107, 0); font-size: 16px;'>Summary</strong></p>" +
+    //    "<p>Your text here<br><br><br><br></p>" +
+    //    "<p><strong style='color: rgb(178, 107, 0); font-size: 16px;'>Technical Background</strong></p>" +
+    //    "<p>Your text here<br><br><br><br></p>" +
+    //    "<p><strong style='color: rgb(178, 107, 0); font-size: 16px;'>Resolution</strong></p>" +
+    //    "<p class='x'>Your text here<br><br><br><br></p>"
+    //);
 
     $(document).ready(function () {
-        $('div.ql-toolbar').hide();
+        $('.ql-contextmenu').hide();
 
         document.addEventListener('contextmenu', function (event) {
             event.preventDefault();
-            $('div.ql-toolbar').css('left', event.clientX);
-            $('div.ql-toolbar').css('top', event.clientY);
-            $('div.ql-toolbar').css('position', 'fixed');
-            $('div.ql-toolbar').css('z-index', 10000);
-            $('div.ql-toolbar').show();
+            $('.ql-contextmenu').css('left', event.clientX);
+            $('.ql-contextmenu').css('top', event.clientY);
+            $('.ql-contextmenu').css('position', 'fixed');
+            $('.ql-contextmenu').css('z-index', 10000);
+            $('.ql-contextmenu').show();
         });
 
         $(document).click(function () {
@@ -216,7 +282,7 @@
         });
 
         window.addEventListener('click', function (e) {
-            if (document.getElementsByClassName('ql-toolbar')[0].contains(e.target)) {
+            if (document.getElementsByClassName('ql-contextmenu')[0].contains(e.target)) {
                 // Clicked in box
                 console.log('in box');
             } else {
@@ -224,7 +290,7 @@
                 //    quill.setSelection(-1);
                 //}
                 // Clicked outside the box
-                $('div.ql-toolbar').hide();
+                $('div.ql-contextmenu').hide();
             }
         });
     })
