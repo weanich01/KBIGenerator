@@ -53,8 +53,7 @@
     }*/
 
     img {
-        width:30%!important;
-        height:30%!important;
+        height:70%!important;
     }
 
     .ql-contextmenu-btn {
@@ -76,6 +75,7 @@
 </head>
 
 <body>
+    <h1 style="text-align:center">KBI Generator</h1>
 <p class="section-header" contenteditable='false'><strong style='color: rgb(178, 107, 0); font-size: 16px;'>Version</strong></p>
 <div id="editor"></div>
 
@@ -88,10 +88,10 @@
 <p class="section-header"  contenteditable='false'><strong style='color: rgb(178, 107, 0); font-size: 16px;'>Resolution</strong></p>
 <div id="editor5"></div>
 
-<div class="ql-contextmenu">
-    @*<button class="ql-contextmenu-btn">Insert Image Here</button>*@
-    <button class="ql-contextmenu-btn">Show Mockup</button>
-    <button class="ql-contextmenu-btn">Generate KBI</button>
+<div id="ql-contextmenu" class="ql-contextmenu">
+    <button id="insertImage" onclick="insertImage()">Insert Image here.</button>
+    <button style="display:block">Show Mockup</button>
+    <button style="display:block">Generate KBI</button>
 </div>
 </body>
 <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
@@ -166,6 +166,10 @@
     toolbar.addHandler('preview', function () {
         console.log('preview')
     });
+    for(item of document.getElementsByClassName('ql-image'))
+    {
+        $(item).hide()
+    }
     //var previewBtn = document.querySelector('.ql-image');
     //previewBtn.innerHTML = "Insert Image Here.";
     //var previewBtn = document.querySelector('.ql-preview');
@@ -274,12 +278,51 @@
     //    "<p><strong style='color: rgb(178, 107, 0); font-size: 16px;'>Resolution</strong></p>" +
     //    "<p class='x'>Your text here<br><br><br><br></p>"
     //);
+    var tempState = '';
 
+    function insertImage() {
+        if (tempState == 'editor') {
+            $(quill.getModule('toolbar').controls[0][1]).click()
+        }
+        if (tempState == 'editor2') {
+            $(quill2.getModule('toolbar').controls[0][1]).click()
+        }
+        if (tempState == 'editor3') {
+            $(quill3.getModule('toolbar').controls[0][1]).click()
+        }
+        if (tempState == 'editor4') {
+            $(quill4.getModule('toolbar').controls[0][1]).click()
+        }
+        if (tempState == 'editor5') {
+            $(quill5.getModule('toolbar').controls[0][1]).click()
+        }
+    }
     $(document).ready(function () {
         $('.ql-contextmenu').hide();
 
         document.addEventListener('contextmenu', function (event) {
             event.preventDefault();
+            
+                $('#insertImage').show();
+            if (document.getElementById('editor').contains(event.target)) {
+                tempState = 'editor';
+            }
+            else if (document.getElementById('editor2').contains(event.target)) {
+                tempState = 'editor2';
+            }
+            else if (document.getElementById('editor3').contains(event.target)) {
+                tempState = 'editor3';
+            }
+            else if (document.getElementById('editor4').contains(event.target)) {
+                tempState = 'editor4';
+            }
+            else if (document.getElementById('editor5').contains(event.target)) {
+                tempState = 'editor5';
+            }
+            else {
+                tempState = '';
+                $('#insertImage').hide();
+            }
             $('.ql-contextmenu').css('left', event.clientX);
             $('.ql-contextmenu').css('top', event.clientY);
             $('.ql-contextmenu').css('position', 'fixed');
@@ -292,14 +335,8 @@
         });
 
         window.addEventListener('click', function (e) {
-            if (document.getElementsByClassName('ql-contextmenu')[0].contains(e.target)) {
-                // Clicked in box
-                console.log('in box');
+            if (document.getElementById('ql-contextmenu').contains(e.target)) {
             } else {
-                //if (document.getElementsByTagName('p').contains(e.target)) {
-                //    quill.setSelection(-1);
-                //}
-                // Clicked outside the box
                 $('div.ql-contextmenu').hide();
             }
         });
