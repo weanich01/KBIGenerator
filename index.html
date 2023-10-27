@@ -1,100 +1,121 @@
 <!-- Include stylesheet -->
 <html>
 <head>
-<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@tabler/icons@latest/icons-react/dist/index.umd.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <style type="text/css">
 
-<style type="text/css">
 
+            .ql-snow {
+                .ql-picker
 
-    .ql-snow {
-        .ql-picker
+            {
+                &.ql-size
 
-    {
-        &.ql-size
+            {
+                .ql-picker-label, .ql-picker-item
 
-    {
-        .ql-picker-label, .ql-picker-item
+            {
+                &::before
 
-    {
-        &::before
+            {
+                content: attr(data-value) !important;
+            }
 
-    {
-        content: attr(data-value) !important;
-    }
+            }
+            }
+            }
+            }
 
-    }
-    }
-    }
-    }
+            /* .ql-formats {
+            display: block !important;
+        }*/
 
-   /* .ql-formats {
-        display: block !important;
-    }*/
+            /* .ql-toolbar {
+            box-shadow: inset -1px -1px 100px 100px white;
+        }*/
 
-   /* .ql-toolbar {
-        box-shadow: inset -1px -1px 100px 100px white;
-    }*/
+            .ql-container {
+                height: 200px;
+            }
 
-    .ql-container {
-        height:200px;
-    }
+            .ql-editor {
+                font-family: Arial !important;
+            }
 
-    .ql-editor {
-        font-family: Arial !important;
-    }
+            p:empty:not(:focus)::before {
+                content: attr(data-placeholder);
+            }
 
-    p:empty:not(:focus)::before {
-        content: attr(data-placeholder);
-    }
+            /*.ql-toolbar button {
+            width: 150px !important;
+            text-align:left!important;
+        }*/
 
-    /*.ql-toolbar button {
-        width: 150px !important;
-        text-align:left!important;
-    }*/
+            img {
+                max-width: 352px!important;
+                max-height:210px!important;
+            }
 
-    img {
-        height:70%!important;
-    }
+            .ql-contextmenu {
+                border: 2px solid #cacaca;
+                background: #ffffff;
+                width: 160px;
+            }
 
-    .ql-contextmenu-btn {
-        background-color: white;
-        z-index: 10000;
-        width: 150px;
-        text-align:left;
-        float:none;
-        display:block;
-        border:none;
-    }
+        .ql-contextmenu-btn {
+            background-color: white !important;
+            z-index: 10000;
+            width: 150px;
+            text-align: left;
+            display: block;
+            font-size: 14px;
+            border: none;
+            padding: 3px;
+            margin: 3px;
+        }
 
-    .section-header{
-        margin-top:30px;
-    }
-</style>
-<!-- Create the editor container -->
+            button.ql-contextmenu-btn:hover {
+                background-color: #E8E8E9!important;
+                
+            }
+
+            .section-header {
+                margin-top: 30px;
+            }
+
+            i{
+                margin-right:5px;
+            }
+    </style>
+    <!-- Create the editor container -->
 
 </head>
 
 <body>
     <h1 style="text-align:center">KBI Generator</h1>
-<p class="section-header" contenteditable='false'><strong style='color: rgb(178, 107, 0); font-size: 16px;'>Version</strong></p>
-<div id="editor"></div>
+    <p class="section-header" contenteditable='false'><strong style='color: rgb(178, 107, 0); font-size: 16px;'>Version</strong></p>
+    <div id="editor"></div>
 
-<p class="section-header" contenteditable='false'><strong style='color: rgb(178, 107, 0); font-size: 16px;'>Date</strong></p>
-<div id="editor2"></div>
-<p class="section-header" contenteditable='false'><strong style='color: rgb(178, 107, 0); font-size: 16px;'>Summary</strong></p>
-<div id="editor3"></div>
-<p class="section-header" contenteditable='false'><strong style='color: rgb(178, 107, 0); font-size: 16px;'>Technical Background</strong></p>
-<div id="editor4"></div>
-<p class="section-header"  contenteditable='false'><strong style='color: rgb(178, 107, 0); font-size: 16px;'>Resolution</strong></p>
-<div id="editor5"></div>
+    <p class="section-header" contenteditable='false'><strong style='color: rgb(178, 107, 0); font-size: 16px;'>Date</strong></p>
+    <div id="editor2"></div>
+    <p class="section-header" contenteditable='false'><strong style='color: rgb(178, 107, 0); font-size: 16px;'>Summary</strong></p>
+    <div id="editor3"></div>
+    <p class="section-header" contenteditable='false'><strong style='color: rgb(178, 107, 0); font-size: 16px;'>Technical Background</strong></p>
+    <div id="editor4"></div>
+    <p class="section-header" contenteditable='false'><strong style='color: rgb(178, 107, 0); font-size: 16px;'>Resolution</strong></p>
+    <div id="editor5"></div>
 
-<div id="ql-contextmenu" class="ql-contextmenu">
-    <button id="insertImage" onclick="insertImage()">Insert Image here.</button>
-    <button style="display:block">Show Mockup</button>
-    <button style="display:block">Generate KBI</button>
-</div>
+    <div id="ql-contextmenu" class="ql-contextmenu">
+        <button class="ql-contextmenu-btn" id="insertImage" onclick="insertImage()">
+            <i class="ti ti-photo"></i>Insert Image here.</button>
+        <button class="ql-contextmenu-btn"><i class="ti ti-presentation"></i>Show Mockup</button>
+        <button class="ql-contextmenu-btn"><i class="ti ti-file-export"></i>Generate KBI</button>
+    </div>
 </body>
 <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+<script type="text/javascript" src='include.js' ></script>
 <!-- Include the Quill library -->
 <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 
@@ -113,8 +134,8 @@
     Quill.register(Size, true);
     var toolbarOptions = [
         ['image'],
-       // ['preview'],
-      //  ['generate'],
+        // ['preview'],
+        //  ['generate'],
         ['bold'],        // toggled buttons
         [{
             'size': ["10px",
@@ -123,7 +144,7 @@
                 "16px"]
         }],  // custom dropdown
         [{ 'color': [] }],
-        
+
     ];
 
     var quill = new Quill('#editor', {
@@ -133,28 +154,28 @@
         placeholder: 'Your text here...',
         theme: 'snow'
     });
-      var quill2 = new Quill('#editor2', {
+    var quill2 = new Quill('#editor2', {
         modules: {
             toolbar: toolbarOptions
         },
         placeholder: 'Your text here...',
         theme: 'snow'
-      });
-      var quill3 = new Quill('#editor3', {
+    });
+    var quill3 = new Quill('#editor3', {
         modules: {
             toolbar: toolbarOptions
         },
         placeholder: 'Your text here...',
         theme: 'snow'
-      });
-      var quill4 = new Quill('#editor4', {
+    });
+    var quill4 = new Quill('#editor4', {
         modules: {
             toolbar: toolbarOptions
         },
         placeholder: 'Your text here...',
         theme: 'snow'
-      });
-      var quill5 = new Quill('#editor5', {
+    });
+    var quill5 = new Quill('#editor5', {
         modules: {
             toolbar: toolbarOptions
         },
@@ -166,8 +187,7 @@
     toolbar.addHandler('preview', function () {
         console.log('preview')
     });
-    for(item of document.getElementsByClassName('ql-image'))
-    {
+    for (item of document.getElementsByClassName('ql-image')) {
         $(item).hide()
     }
     //var previewBtn = document.querySelector('.ql-image');
@@ -262,10 +282,10 @@
 
     // quill editor add image handler
     //quill.getModule('toolbar').addHandler('image', (x) => {
-     //   console.log(x);
-   //     selectLocalImageAsData();
-        //selectLocalImage();
-   // });
+    //   console.log(x);
+    //     selectLocalImageAsData();
+    //selectLocalImage();
+    // });
 
     //quill.pasteHTML(
     //    "<p style='left:50px;'>Your text here<br><br><br><br></p>" +
@@ -299,11 +319,11 @@
     }
     $(document).ready(function () {
         $('.ql-contextmenu').hide();
-
+        $(document).spellAsYouType();
         document.addEventListener('contextmenu', function (event) {
             event.preventDefault();
-            
-                $('#insertImage').show();
+
+            $('#insertImage').show();
             if (document.getElementById('editor').contains(event.target)) {
                 tempState = 'editor';
             }
