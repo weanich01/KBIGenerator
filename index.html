@@ -456,8 +456,8 @@
         });
         var ctrlPressed = false;
         $('#editor').on('keyup', function (e) {
-             if (!ctrlPressed) {
-                 checkAndreturn(e.target);
+            if (!ctrlPressed) {
+                checkAndreturn(e.target);
             }
             if (e.ctrlKey && e.keyCode == 17) {
                 return;
@@ -476,68 +476,8 @@
         })
 
         $('#editor2').on('keyup', function (e) {
-             if (!ctrlPressed) {
-                 checkAndreturn(e.target);
-            }
-            if (e.ctrlKey && e.keyCode == 17) {
-                return;
-            }
-            if (e.keyCode != 32 && !ctrlPressed) {
-                checkAndreturn(e.target);
-            }
-
-            if (e.keyCode == 86 && ctrlPressed) {
-                checkAndreturn(e.target);
-                ctrlPressed = false;
-            }
-             if (e.ctrlKey) {
-                ctrlPressed = false;
-            }
-         })
-
-        $('#editor3').on('keyup', function (e) {
-             if (!ctrlPressed) {
-                 checkAndreturn(e.target);
-            }
-            if (e.ctrlKey && e.keyCode == 17) {
-                return;
-            }
-            if (e.keyCode != 32 && !ctrlPressed) {
-                checkAndreturn(e.target);
-            }
-
-            if (e.keyCode == 86 && ctrlPressed) {
-                checkAndreturn(e.target);
-                ctrlPressed = false;
-            }
-             if (e.ctrlKey) {
-                ctrlPressed = false;
-            }
-         })
-
-        $('#editor4').on('keyup', function (e) {
-             if (!ctrlPressed) {
-                 checkAndreturn(e.target);
-            }
-            if (e.ctrlKey && e.keyCode == 17) {
-                return;
-            }
-            if (e.keyCode != 32 && !ctrlPressed) {
-                checkAndreturn(e.target);
-            }
-
-            if (e.keyCode == 86 && ctrlPressed) {
-                checkAndreturn(e.target);
-                ctrlPressed = false;
-            }
-             if (e.ctrlKey) {
-                ctrlPressed = false;
-            }
-         })
-
-        $('#editor5').on('keyup', function (e) {
             if (!ctrlPressed) {
-                 checkAndreturn(e.target);
+                checkAndreturn(e.target);
             }
             if (e.ctrlKey && e.keyCode == 17) {
                 return;
@@ -553,33 +493,93 @@
             if (e.ctrlKey) {
                 ctrlPressed = false;
             }
-         })
-         $('#editor').on('keydown', function (e) {
-            if (e.ctrlKey ) {
-                ctrlPressed = true;
+        })
+
+        $('#editor3').on('keyup', function (e) {
+            if (!ctrlPressed) {
+                checkAndreturn(e.target);
             }
-         })
-         $('#editor2').on('keydown', function (e) {
-            if (e.ctrlKey ) {
-                ctrlPressed = true;
+            if (e.ctrlKey && e.keyCode == 17) {
+                return;
             }
-         })
-         $('#editor3').on('keydown', function (e) {
-            if (e.ctrlKey ) {
-                ctrlPressed = true;
+            if (e.keyCode != 32 && !ctrlPressed) {
+                checkAndreturn(e.target);
             }
-         })
-         $('#editor4').on('keydown', function (e) {
-            if (e.ctrlKey ) {
-                ctrlPressed = true;
+
+            if (e.keyCode == 86 && ctrlPressed) {
+                checkAndreturn(e.target);
+                ctrlPressed = false;
             }
-         })
-         $('#editor5').on('keydown', function (e) {
-            if (e.ctrlKey ) {
+            if (e.ctrlKey) {
+                ctrlPressed = false;
+            }
+        })
+
+        $('#editor4').on('keyup', function (e) {
+            if (!ctrlPressed) {
+                checkAndreturn(e.target);
+            }
+            if (e.ctrlKey && e.keyCode == 17) {
+                return;
+            }
+            if (e.keyCode != 32 && !ctrlPressed) {
+                checkAndreturn(e.target);
+            }
+
+            if (e.keyCode == 86 && ctrlPressed) {
+                checkAndreturn(e.target);
+                ctrlPressed = false;
+            }
+            if (e.ctrlKey) {
+                ctrlPressed = false;
+            }
+        })
+
+        $('#editor5').on('keyup', function (e) {
+            if (!ctrlPressed) {
+                checkAndreturn(e.target);
+            }
+            if (e.ctrlKey && e.keyCode == 17) {
+                return;
+            }
+            if (e.keyCode != 32 && !ctrlPressed) {
+                checkAndreturn(e.target);
+            }
+
+            if (e.keyCode == 86 && ctrlPressed) {
+                checkAndreturn(e.target);
+                ctrlPressed = false;
+            }
+            if (e.ctrlKey) {
+                ctrlPressed = false;
+            }
+        })
+        $('#editor').on('keydown', function (e) {
+            if (e.ctrlKey) {
                 ctrlPressed = true;
             }
         })
-        
+        $('#editor2').on('keydown', function (e) {
+            if (e.ctrlKey) {
+                ctrlPressed = true;
+            }
+        })
+        $('#editor3').on('keydown', function (e) {
+            if (e.ctrlKey) {
+                ctrlPressed = true;
+            }
+        })
+        $('#editor4').on('keydown', function (e) {
+            if (e.ctrlKey) {
+                ctrlPressed = true;
+            }
+        })
+        $('#editor5').on('keydown', function (e) {
+            if (e.ctrlKey) {
+                ctrlPressed = true;
+            }
+        })
+
         //document.getElementById("editor2").addEventListener("input", function () {
         //    spellcheck();
         //}, false);
@@ -608,25 +608,25 @@
         //});
     })
     function checkAndreturn(htmlElement) {
-            //get current cursor position
-            const sel = window.getSelection();
-            const node = sel.focusNode;
-            const offset = sel.focusOffset;
-            const pos = getCursorPosition(htmlElement, node, offset, { pos: 0, done: false });
-            console.log(pos);
-            if (offset === 0) pos.pos += 0.5;
+        //get current cursor position
+        const sel = window.getSelection();
+        const node = sel.focusNode;
+        const offset = sel.focusOffset;
+        const pos = getCursorPosition(htmlElement, node, offset, { pos: 0, done: false });
+        console.log(pos);
+        if (offset === 0) pos.pos += 0.5;
 
-            spellcheck(htmlElement);
+        spellcheck(htmlElement);
 
-            // restore the position
-            sel.removeAllRanges();
-            const range = setCursorPosition(htmlElement, document.createRange(), {
-                pos: pos.pos,
-                done: false,
-            });
-            range.collapse(true);
-            sel.addRange(range);
-        }
+        // restore the position
+        sel.removeAllRanges();
+        const range = setCursorPosition(htmlElement, document.createRange(), {
+            pos: pos.pos,
+            done: false,
+        });
+        range.collapse(true);
+        sel.addRange(range);
+    }
     // get the cursor position from .editor start
     function getCursorPosition(parent, node, offset, stat) {
         if (stat.done) return stat;
@@ -694,12 +694,12 @@
 
     var gg;
     function spellcheck(htmlElement) {
-        
+
         const pattern = /\S+/g;
         gg = htmlElement;
         // gg = $(htmlElement).find(p);
         var p = $(htmlElement).find('p');
-       
+
         for (let idx = 0; idx < $(p).length; idx++) {
             if ($($(p)[idx]).find('img').length) {
                 continue;
@@ -726,14 +726,20 @@
             //    console.log(html);
             //}
             html = text.map(function (word) {
-                var correct = typo.check(word.trim());
+                var correct = typo.check(trimSpecialCharacters(word).toLowerCase());
                 var className = correct ? 'border-bottom: 2px solid green;' : 'text-decoration-line: none;border-bottom: 2px solid red;';
-               
+
                 return `<u style="${className}">${word.trim()}</u>`;
 
             }).join(' ');
             $($(p)[idx]).html(html + ' ');
             html = "";
         }
+    }
+
+    function trimSpecialCharacters(inputString) {
+        // Use the regular expression to replace the specified characters with an empty string
+        var cleanedString = inputString.replace(/[. :;()[\]{}]+$/g, '');
+        return cleanedString;
     }
 </script>
