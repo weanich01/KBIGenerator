@@ -548,7 +548,7 @@
             }
         })
 
-       
+
 
         $('#editor4').on('keyup', function (e) {
             if (e.keyCode == 17) {
@@ -594,11 +594,11 @@
             }
         })
 
-         $('#editor3').on('keydown', function (e) {
+        $('#editor3').on('keydown', function (e) {
             if (e.keyCode == 17) {
                 ctrlPressed = true;
             }
-         })
+        })
 
         $('#editor4').on('keydown', function (e) {
             if (e.ctrlKey) {
@@ -741,17 +741,40 @@
             if (text == null) {
                 break;
             }
-            html = text.map(function (word) {
+            htmlArray = text.map(function (word) {
                 var correct = typo.check(trimSpecialCharacters(word).toLowerCase());
-                var className = correct ? 'border-bottom: 2px solid green;' : 'text-decoration-line: none;border-bottom: 2px solid red;';
+                var className = correct ? 'border-bottom: 2px solid yellow;' : 'text-decoration-line: none;border-bottom: 2px solid yellow;';
 
                 return `<u style="${className}">${word.trim()}</u>`;
 
-            }).join(' ');
+            });
+            //if ($(htmlElement).find('u').length == htmlArray.length) {
+            //    console.log('=====');
+            //}
+            html = htmlArray.join(' ');
             $($(p)[idx]).html(html + ' ');
-            
+
             html = "";
         }
+    }
+
+    function replaceNonFormattedText(input) {
+        // Use regular expressions to match text within angle brackets and replace non-matching text
+        const regex = /<[^>]+>.*?<\/[^>]+>|<([^>]+)>([^<]+)<\/\1>|([^<]+)/g;
+
+        const replacedText = input.replace(regex, function (match, p1, p2, p3) {
+            if (p1 && p2) {
+                // Matched format <{TAGS}>ANYCHARACTER</TAGS>
+                return match;
+            } else if (p3) {
+                // Non-matching text
+                return `<XXX>${p3}<XXX>`;
+            } else {
+                return match;
+            }
+        });
+
+        return replacedText;
     }
 
     function trimSpecialCharacters(inputString) {
