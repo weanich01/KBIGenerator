@@ -456,6 +456,9 @@
         });
         var ctrlPressed = false;
         $('#editor').on('keyup', function (e) {
+             if (!ctrlPressed) {
+                 checkAndreturn(e.target);
+            }
             if (e.ctrlKey && e.keyCode == 17) {
                 return;
             }
@@ -465,6 +468,7 @@
 
             if (e.keyCode == 86 && ctrlPressed) {
                 checkAndreturn(e.target);
+                ctrlPressed = false;
             }
             if (e.ctrlKey) {
                 ctrlPressed = false;
@@ -472,7 +476,9 @@
         })
 
         $('#editor2').on('keyup', function (e) {
-            
+             if (!ctrlPressed) {
+                 checkAndreturn(e.target);
+            }
             if (e.ctrlKey && e.keyCode == 17) {
                 return;
             }
@@ -482,6 +488,7 @@
 
             if (e.keyCode == 86 && ctrlPressed) {
                 checkAndreturn(e.target);
+                ctrlPressed = false;
             }
              if (e.ctrlKey) {
                 ctrlPressed = false;
@@ -489,7 +496,9 @@
          })
 
         $('#editor3').on('keyup', function (e) {
-            
+             if (!ctrlPressed) {
+                 checkAndreturn(e.target);
+            }
             if (e.ctrlKey && e.keyCode == 17) {
                 return;
             }
@@ -499,6 +508,7 @@
 
             if (e.keyCode == 86 && ctrlPressed) {
                 checkAndreturn(e.target);
+                ctrlPressed = false;
             }
              if (e.ctrlKey) {
                 ctrlPressed = false;
@@ -506,7 +516,9 @@
          })
 
         $('#editor4').on('keyup', function (e) {
-            
+             if (!ctrlPressed) {
+                 checkAndreturn(e.target);
+            }
             if (e.ctrlKey && e.keyCode == 17) {
                 return;
             }
@@ -516,6 +528,7 @@
 
             if (e.keyCode == 86 && ctrlPressed) {
                 checkAndreturn(e.target);
+                ctrlPressed = false;
             }
              if (e.ctrlKey) {
                 ctrlPressed = false;
@@ -523,7 +536,9 @@
          })
 
         $('#editor5').on('keyup', function (e) {
-            
+            if (!ctrlPressed) {
+                 checkAndreturn(e.target);
+            }
             if (e.ctrlKey && e.keyCode == 17) {
                 return;
             }
@@ -533,6 +548,7 @@
 
             if (e.keyCode == 86 && ctrlPressed) {
                 checkAndreturn(e.target);
+                ctrlPressed = false;
             }
             if (e.ctrlKey) {
                 ctrlPressed = false;
