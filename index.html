@@ -98,7 +98,6 @@
 
         .ql-editor {
             height: auto;
-            min-height: 200px;
             font-family: Arial !important;
         }
 
@@ -114,6 +113,35 @@
             text-decoration-line: none;
         }
 
+        body, button, span, svg, div, img, h1, h2, h3, h4, h5, h6, p, u {
+            font-family: Aerial !important;
+        }
+
+        p {
+            font-size: 14px;
+        }
+
+            p:blank:before {
+                content: 'abc';
+            }
+
+        div.ql-toolbar.ql-snow {
+            border: none !important;
+            display: inline-block;
+        }
+
+        .section-header {
+            display: inline-block;
+        }
+
+        .ql-container.ql-snow {
+            border: none !important;
+        }
+
+        #editor, #editor2 {
+            height: 60px !important;
+            min-height: 60px !important;
+        }
         /*.pre {
             white-space: pre-wrap !important;
         }*/
@@ -162,6 +190,7 @@
 <body>
     <h1 style="text-align:center">KBI Generator</h1>
     <p class="section-header" contenteditable='false'><strong style='color: rgb(178, 107, 0); font-size: 16px;'>Version</strong></p>
+
     <div id="editor"></div>
 
     <p class="section-header" contenteditable='false'><strong style='color: rgb(178, 107, 0); font-size: 16px;'>Date</strong></p>
@@ -230,6 +259,7 @@
         placeholder: 'Your text here...',
         theme: 'snow'
     });
+    quill.getModule('keyboard').bindings[13] = null;
     var quill2 = new Quill('#editor2', {
         modules: {
             toolbar: toolbarOptions
@@ -237,6 +267,7 @@
         placeholder: 'Your text here...',
         theme: 'snow'
     });
+    quill2.getModule('keyboard').bindings[13] = null;
     var quill3 = new Quill('#editor3', {
         modules: {
             toolbar: toolbarOptions
@@ -258,6 +289,8 @@
         placeholder: 'Your text here...',
         theme: 'snow'
     });
+
+
     //   WEBSPELLCHECKER.init({
     //	container: quill.root
     //});
@@ -455,7 +488,13 @@
             }
         });
         var ctrlPressed = false;
+        var otherPressed = false;
+
         $('#editor').on('keyup', function (e) {
+            if (e.keyCode === 13) {
+                e.preventDefault();
+                return;
+            }
             if (!ctrlPressed) {
                 checkAndreturn(e.target);
             }
@@ -476,6 +515,10 @@
         })
 
         $('#editor2').on('keyup', function (e) {
+            if (e.keyCode === 13) {
+                e.preventDefault();
+                return;
+            }
             if (!ctrlPressed) {
                 checkAndreturn(e.target);
             }
@@ -496,79 +539,67 @@
         })
 
         $('#editor3').on('keyup', function (e) {
-            if (!ctrlPressed) {
-                checkAndreturn(e.target);
-            }
-            if (e.ctrlKey && e.keyCode == 17) {
-                return;
-            }
-            if (e.keyCode != 32 && !ctrlPressed) {
-                checkAndreturn(e.target);
-            }
-
-            if (e.keyCode == 86 && ctrlPressed) {
-                checkAndreturn(e.target);
+            if (e.keyCode == 17) {
                 ctrlPressed = false;
-            }
-            if (e.ctrlKey) {
-                ctrlPressed = false;
+            } else {
+                if (!ctrlPressed) {
+                    checkAndreturn(e.target);
+                }
             }
         })
 
-        $('#editor4').on('keyup', function (e) {
-            if (!ctrlPressed) {
-                checkAndreturn(e.target);
-            }
-            if (e.ctrlKey && e.keyCode == 17) {
-                return;
-            }
-            if (e.keyCode != 32 && !ctrlPressed) {
-                checkAndreturn(e.target);
-            }
+       
 
-            if (e.keyCode == 86 && ctrlPressed) {
-                checkAndreturn(e.target);
+        $('#editor4').on('keyup', function (e) {
+            if (e.keyCode == 17) {
                 ctrlPressed = false;
-            }
-            if (e.ctrlKey) {
-                ctrlPressed = false;
+            } else {
+                if (!ctrlPressed) {
+                    checkAndreturn(e.target);
+                }
             }
         })
 
         $('#editor5').on('keyup', function (e) {
-            if (!ctrlPressed) {
-                checkAndreturn(e.target);
+            if (e.keyCode == 17) {
+                ctrlPressed = false;
+            } else {
+                if (!ctrlPressed) {
+                    checkAndreturn(e.target);
+                }
             }
-            if (e.ctrlKey && e.keyCode == 17) {
+        })
+
+        $('#editor').on('keydown', function (e) {
+            if (e.keyCode === 13) {
+                e.preventDefault();
                 return;
             }
-            if (e.keyCode != 32 && !ctrlPressed) {
-                checkAndreturn(e.target);
+
+            if (e.ctrlKey) {
+                ctrlPressed = true;
             }
 
-            if (e.keyCode == 86 && ctrlPressed) {
-                checkAndreturn(e.target);
-                ctrlPressed = false;
-            }
-            if (e.ctrlKey) {
-                ctrlPressed = false;
-            }
-        })
-        $('#editor').on('keydown', function (e) {
-            if (e.ctrlKey) {
-                ctrlPressed = true;
-            }
+
+            console.log(e.keyCode);
         })
         $('#editor2').on('keydown', function (e) {
+            if (e.keyCode === 13) {
+                e.preventDefault();
+                return;
+            }
+
             if (e.ctrlKey) {
                 ctrlPressed = true;
             }
         })
-        $('#editor3').on('keydown', function (e) {
-            if (e.ctrlKey) {
+
+         $('#editor3').on('keydown', function (e) {
+            if (e.keyCode == 17) {
                 ctrlPressed = true;
             }
-        })
+         })
+
         $('#editor4').on('keydown', function (e) {
             if (e.ctrlKey) {
                 ctrlPressed = true;
@@ -710,21 +741,6 @@
             if (text == null) {
                 break;
             }
-            //text = removeDuplicates(text);
-            //for (let idx2 = 0; idx2 < text.length; idx2++) {
-            //    if (typo.check(text[idx2]) == false) {
-            //        console.log("html=");
-            //        console.log(html);
-            //        console.log("replace=");
-            //        console.log(text[idx2]);
-            //        console.log("with=");
-            //        console.log('<span style="color:red"> ' + text[idx2] + "</span>");
-            //        html = html.replaceAll(text[idx2], '<span style="color:red"> ' + text[idx2] + "</span>");
-            //    } else {
-            //        html = html;
-            //    }
-            //    console.log(html);
-            //}
             html = text.map(function (word) {
                 var correct = typo.check(trimSpecialCharacters(word).toLowerCase());
                 var className = correct ? 'border-bottom: 2px solid green;' : 'text-decoration-line: none;border-bottom: 2px solid red;';
@@ -733,6 +749,7 @@
 
             }).join(' ');
             $($(p)[idx]).html(html + ' ');
+            
             html = "";
         }
     }
