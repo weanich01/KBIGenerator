@@ -694,11 +694,16 @@
 
     var gg;
     function spellcheck(htmlElement) {
+        
         const pattern = /\S+/g;
         gg = htmlElement;
         // gg = $(htmlElement).find(p);
         var p = $(htmlElement).find('p');
+       
         for (let idx = 0; idx < $(p).length; idx++) {
+            if ($($(p)[idx]).find('img').length) {
+                continue;
+            }
             // let text = $(p)[idx].innerText.match(pattern);
             let text = $(p)[idx].innerText.split(/(?<=\s)/);
             var html = $(p)[idx].innerText;
