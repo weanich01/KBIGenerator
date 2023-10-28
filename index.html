@@ -464,6 +464,46 @@
                 checkAndreturn(e.target);
             }
         })
+
+         $('#editor2').on('keyup', function (e) {
+            if (e.ctrlKey) {
+                return;
+            }
+            if (e.keyCode != 32) {
+                console.log(e.keyCode);
+                checkAndreturn(e.target);
+            }
+         })
+
+         $('#editor3').on('keyup', function (e) {
+            if (e.ctrlKey) {
+                return;
+            }
+            if (e.keyCode != 32) {
+                console.log(e.keyCode);
+                checkAndreturn(e.target);
+            }
+         })
+
+         $('#editor4').on('keyup', function (e) {
+            if (e.ctrlKey) {
+                return;
+            }
+            if (e.keyCode != 32) {
+                console.log(e.keyCode);
+                checkAndreturn(e.target);
+            }
+         })
+
+         $('#editor5').on('keyup', function (e) {
+            if (e.ctrlKey) {
+                return;
+            }
+            if (e.keyCode != 32) {
+                console.log(e.keyCode);
+                checkAndreturn(e.target);
+            }
+        })
         
         //document.getElementById("editor2").addEventListener("input", function () {
         //    spellcheck();
@@ -497,7 +537,7 @@
             const sel = window.getSelection();
             const node = sel.focusNode;
             const offset = sel.focusOffset;
-            const pos = getCursorPosition(editor, node, offset, { pos: 0, done: false });
+            const pos = getCursorPosition(htmlElement, node, offset, { pos: 0, done: false });
             console.log(pos);
             if (offset === 0) pos.pos += 0.5;
 
@@ -505,7 +545,7 @@
 
             // restore the position
             sel.removeAllRanges();
-            const range = setCursorPosition(editor, document.createRange(), {
+            const range = setCursorPosition(htmlElement, document.createRange(), {
                 pos: pos.pos,
                 done: false,
             });
