@@ -147,13 +147,13 @@
             typo = new Typo("en_US"); // Create a Typo instance for the English language.
 
 
-            inputText.addEventListener("input", function () {
-                const text = inputText.value;
-                const corrections = typo.suggest(text);
+            //inputText.addEventListener("input", function () {
+            //    const text = inputText.value;
+            //    const corrections = typo.suggest(text);
 
-                // Display the corrected text in the output element.
-                outputText.textContent = corrections[0] || "No suggestions found.";
-            });
+            //    // Display the corrected text in the output element.
+            //    outputText.textContent = corrections[0] || "No suggestions found.";
+            //});
         });
     </script>
 
@@ -454,54 +454,113 @@
                 $('div.ql-contextmenu').hide();
             }
         });
-
+        var ctrlPressed = false;
         $('#editor').on('keyup', function (e) {
-            if (e.ctrlKey) {
+            if (e.ctrlKey && e.keyCode == 17) {
                 return;
             }
-            if (e.keyCode != 32) {
-                console.log(e.keyCode);
+            if (e.keyCode != 32 && !ctrlPressed) {
                 checkAndreturn(e.target);
+            }
+
+            if (e.keyCode == 86 && ctrlPressed) {
+                checkAndreturn(e.target);
+            }
+            if (e.ctrlKey) {
+                ctrlPressed = false;
             }
         })
 
-         $('#editor2').on('keyup', function (e) {
-            if (e.ctrlKey) {
+        $('#editor2').on('keyup', function (e) {
+            
+            if (e.ctrlKey && e.keyCode == 17) {
                 return;
             }
-            if (e.keyCode != 32) {
-                console.log(e.keyCode);
+            if (e.keyCode != 32 && !ctrlPressed) {
                 checkAndreturn(e.target);
+            }
+
+            if (e.keyCode == 86 && ctrlPressed) {
+                checkAndreturn(e.target);
+            }
+             if (e.ctrlKey) {
+                ctrlPressed = false;
             }
          })
 
-         $('#editor3').on('keyup', function (e) {
-            if (e.ctrlKey) {
+        $('#editor3').on('keyup', function (e) {
+            
+            if (e.ctrlKey && e.keyCode == 17) {
                 return;
             }
-            if (e.keyCode != 32) {
-                console.log(e.keyCode);
+            if (e.keyCode != 32 && !ctrlPressed) {
                 checkAndreturn(e.target);
+            }
+
+            if (e.keyCode == 86 && ctrlPressed) {
+                checkAndreturn(e.target);
+            }
+             if (e.ctrlKey) {
+                ctrlPressed = false;
             }
          })
 
-         $('#editor4').on('keyup', function (e) {
-            if (e.ctrlKey) {
+        $('#editor4').on('keyup', function (e) {
+            
+            if (e.ctrlKey && e.keyCode == 17) {
                 return;
             }
-            if (e.keyCode != 32) {
-                console.log(e.keyCode);
+            if (e.keyCode != 32 && !ctrlPressed) {
                 checkAndreturn(e.target);
+            }
+
+            if (e.keyCode == 86 && ctrlPressed) {
+                checkAndreturn(e.target);
+            }
+             if (e.ctrlKey) {
+                ctrlPressed = false;
             }
          })
 
-         $('#editor5').on('keyup', function (e) {
-            if (e.ctrlKey) {
+        $('#editor5').on('keyup', function (e) {
+            
+            if (e.ctrlKey && e.keyCode == 17) {
                 return;
             }
-            if (e.keyCode != 32) {
-                console.log(e.keyCode);
+            if (e.keyCode != 32 && !ctrlPressed) {
                 checkAndreturn(e.target);
+            }
+
+            if (e.keyCode == 86 && ctrlPressed) {
+                checkAndreturn(e.target);
+            }
+            if (e.ctrlKey) {
+                ctrlPressed = false;
+            }
+         })
+         $('#editor').on('keydown', function (e) {
+            if (e.ctrlKey ) {
+                ctrlPressed = true;
+            }
+         })
+         $('#editor2').on('keydown', function (e) {
+            if (e.ctrlKey ) {
+                ctrlPressed = true;
+            }
+         })
+         $('#editor3').on('keydown', function (e) {
+            if (e.ctrlKey ) {
+                ctrlPressed = true;
+            }
+         })
+         $('#editor4').on('keydown', function (e) {
+            if (e.ctrlKey ) {
+                ctrlPressed = true;
+            }
+         })
+         $('#editor5').on('keydown', function (e) {
+            if (e.ctrlKey ) {
+                ctrlPressed = true;
             }
         })
         
