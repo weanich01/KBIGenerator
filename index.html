@@ -743,7 +743,7 @@
             }
             htmlArray = text.map(function (word) {
                 var correct = typo.check(trimSpecialCharacters(word).toLowerCase());
-                var className = correct ? 'border-bottom: 2px solid yellow;' : 'text-decoration-line: none;border-bottom: 2px solid yellow;';
+                var className = correct ? 'border-bottom: 2px solid green;' : 'text-decoration-line: none;border-bottom: 2px solid red;';
 
                 return `<u style="${className}">${word.trim()}</u>`;
 
@@ -752,9 +752,113 @@
             //    console.log('=====');
             //}
             html = htmlArray.join(' ');
-            $($(p)[idx]).html(html + ' ');
+            // $($(p)[idx]).html(html + ' ');
 
+            // html = "";
+
+            var n = document.createElement('p');
+            $(n).html(html);
+            var m = document.createElement('p');
+            $(m).html(replaceNonFormattedText($($(p)[idx]).html()));
+            var mHtml = "";
+            for (mh of $(m).children()) {
+                if ($(mh).prop("tagName") == "U") {
+                    mHtml += $(mh).text().split(/(?<=\s)/).map(x =>
+                        `<u style="text-decoration-line: none;border-bottom: 2px solid red;">${x}</u>`
+                    )
+                } else if($(mh).prop("tagName") == "STRONG") {
+                    mHtml += $(mh).text().split(/(?<=\s)/).map(x =>
+                        `<strong><u style="text-decoration-line: none;border-bottom: 2px solid red;">${x}</u></strong>`
+                    )
+                }
+            }
+            $(m).html(mHtml);
+            var r = document.createElement('p');
+            $(r).html(mHtml);
+           
+            var jj = 0;
+            var ii = 0;
+            var mLength = $(m).children().length;
+            var toBeUpdate = [];
+            // for (var ii = 0; ii < $(n).children().length; ii++) {
+            var wording = "";
+            var stack = [];
+            do {
+                if (jj == $(m).children().length) {
+                    break;
+                }
+                if ($(m).children()[jj].innerText.trim() == '') {
+                    //$($(r).children()[jj]).prop('outerHTML', $(m).children()[jj].innerText.replace(' ', '|'));
+                    //$($(r).children()[jj]).css('border-bottom', '2px solid yellow;');
+                    toBeUpdate.push({ 'jj': jj, 'html': $(r).children()[jj].innerText });
+                    jj++;
+                    continue;
+                }
+                if ($($(m).children()[jj]).hasClass('astext') || $($($(m).children()[jj])).text().split(/(?<=\s)/).length > 1) {
+                    let tempHtml = "";
+                    let texts = $($($(m).children()[jj])).text().split(/(?<=\s)/);
+                    texts = texts.filter(x => x.trim() != '');
+                    for (t of texts) {
+                        while (true) {
+                            if (t.trim() == $(n).children()[ii].innerText) {
+                                var trailingSpaces = t.match(/\s+$/) == null ? '' : t.match(/\s+$/)[0];
+                                tempHtml += $($(n).children()[ii]).prop('outerHTML') + trailingSpaces;
+                                ii++;
+                                break;
+                            } else {
+                                ii++;
+                            }
+                        }
+                    }
+                    toBeUpdate.push({ 'jj': jj, 'html': tempHtml });
+                    //$($(r).children()[jj]).prop('outerHTML', tempHtml);
+                    jj++;
+                }
+                else {
+                    wording += $(m).children()[jj].innerText;
+                    stack.push(jj);
+                    if ($(n).children()[ii].innerText == wording.trim()) {
+                        for (var kk = 0; kk < stack.length; kk++) {
+                            if ($($(m).children()[stack[kk]]).prop("tagName") == "STRONG") {
+                                $($($(r).children()[stack[kk]])).children[0].css('border-bottom', $(n).children()[0].css('border-bottom'))
+                            } else {
+                                $($(r).children()[stack[kk]]).css('border-bottom', $($(n).children()[ii]).css('border-bottom'))
+                            }
+                        }
+                        stack = [];
+                        wording = "";
+                        jj++;
+                        ii++;
+                    } else {
+                        jj++;
+                    }
+                }
+
+            } while (jj < mLength)
+
+            //var resultHtml = $(r).children().map(function (index, child) {
+            //    if (toBeUpdate.filter(c => c.jj == index).length != 0) {
+            //        return toBeUpdate.filter(c => c.jj == index)[0].html;
+            //    } else {
+            //        return $(child).prop('outerHTML');
+            //    }
+            //});
+
+            // }
+
+            constructedHtml = "";
+            for (let index = 0; index < $(r).children().length; index++) {
+                if (toBeUpdate.filter(x => x.jj == index).length > 0) {
+                    constructedHtml += toBeUpdate.filter(x => x.jj == index)[0].html;
+                } else {
+                    constructedHtml += $($(r).children()[index]).prop('outerHTML');
+                }
+            }
+            constructedHtml = constructedHtml.replace('|', ' ');
+            $($(p)[idx]).html( constructedHtml);
             html = "";
+
+
         }
     }
 
@@ -768,7 +872,7 @@
                 return match;
             } else if (p3) {
                 // Non-matching text
-                return `<XXX>${p3}<XXX>`;
+                return `<u class="astext">${p3}</u>`;
             } else {
                 return match;
             }
