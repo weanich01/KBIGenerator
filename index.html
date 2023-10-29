@@ -281,7 +281,6 @@
         },
         placeholder: 'Your text here...',
         theme: 'snow',
-        formats: formatWhitelist
     });
     var quill4 = new Quill('#editor4', {
         modules: {
@@ -497,6 +496,13 @@
         });
         var ctrlPressed = false;
         var otherPressed = false;
+        var delayTimer;
+        function check(target) {
+            clearTimeout(delayTimer);
+            delayTimer = setTimeout(function () {
+                checkAndreturn(target);
+            }, 200); // Will do the ajax stuff after 1000 ms, or 1 s
+        }
 
         $('#editor').on('keyup', function (e) {
             if (e.keyCode === 13) {
@@ -546,38 +552,6 @@
             }
         })
 
-        $('#editor3').on('keyup', function (e) {
-            if (e.keyCode == 17) {
-                ctrlPressed = false;
-            } else {
-                if (!ctrlPressed) {
-                    checkAndreturn(e.target);
-                }
-            }
-        })
-
-
-
-        $('#editor4').on('keyup', function (e) {
-            if (e.keyCode == 17) {
-                ctrlPressed = false;
-            } else {
-                if (!ctrlPressed) {
-                    checkAndreturn(e.target);
-                }
-            }
-        })
-
-        $('#editor5').on('keyup', function (e) {
-            if (e.keyCode == 17) {
-                ctrlPressed = false;
-            } else {
-                if (!ctrlPressed) {
-                    checkAndreturn(e.target);
-                }
-            }
-        })
-
         $('#editor').on('keydown', function (e) {
             if (e.keyCode === 13) {
                 e.preventDefault();
@@ -601,23 +575,65 @@
             }
         })
 
+
+
+        $('#editor3').on('keyup', function (e) {
+            if (e.keyCode == 13) {
+                return;
+            }
+            checkAndreturn(e.target);
+            //if (e.keyCode == 17) {
+            //    ctrlPressed = false;
+            //} else {
+            //    if (!ctrlPressed) {
+            //        checkAndreturn(e.target);
+            //    }
+            //}
+        })
+
         $('#editor3').on('keydown', function (e) {
             if (e.keyCode == 17) {
                 ctrlPressed = true;
             }
         })
 
-        $('#editor4').on('keydown', function (e) {
-            if (e.ctrlKey) {
-                ctrlPressed = true;
+        $('#editor4').on('keyup', function (e) {
+            if (e.keyCode == 13) {
+                return;
+            }
+            if (e.keyCode == 17) {
+                ctrlPressed = false;
+            } else {
+                if (!ctrlPressed) {
+                    checkAndreturn(e.target);
+                }
             }
         })
-        $('#editor5').on('keydown', function (e) {
-            if (e.ctrlKey) {
+
+        $('#editor4').on('keydown', function (e) {
+            if (e.keyCode == 17) {
                 ctrlPressed = true;
             }
         })
 
+        $('#editor5').on('keyup', function (e) {
+            if (e.keyCode == 13) {
+                return;
+            }
+            if (e.keyCode == 17) {
+                ctrlPressed = false;
+            } else {
+                if (!ctrlPressed) {
+                    checkAndreturn(e.target);
+                }
+            }
+        })
+
+        $('#editor5').on('keydown', function (e) {
+            if (e.keyCode == 17) {
+                ctrlPressed = true;
+            }
+        })
         //document.getElementById("editor2").addEventListener("input", function () {
         //    spellcheck();
         //}, false);
@@ -737,6 +753,7 @@
         // gg = $(htmlElement).find(p);
         var p = $(htmlElement).find('p');
 
+        removeDivsByClassName(htmlElement.parentElement.id);
         for (let idx = 0; idx < $(p).length; idx++) {
             if ($($(p)[idx]).find('img').length) {
                 continue;
@@ -748,118 +765,28 @@
                 break;
             }
             htmlArray = text.map(function (word) {
-                var correct = typo.check(trimSpecialCharacters(word).toLowerCase());
+                word = trimSpecialCharacters(word).toLowerCase();
+                var correct = typo.check(word);
                 var className = correct ? 'border-bottom: 2px solid green;' : 'text-decoration-line: none;border-bottom: 2px solid red;';
 
+                if (!correct) {
+                    var positions = findAllExactTextPositionsOnScreen(word);
+                    console.log(positions.length);
+                    if (positions != null && positions.length > 0) {
+                        positions.forEach((position, index) => {
+                            createDivAtPositionWithSize(htmlElement.parentElement.id, true, position.x, position.y, position.width, position.height);
+                        });
+                    }
+                }
                 return `<u style="${className}">${word.trim()}</u>`;
 
             });
             //if ($(htmlElement).find('u').length == htmlArray.length) {
             //    console.log('=====');
             //}
-            html = htmlArray.join(' ');
-            // $($(p)[idx]).html(html + ' ');
+            //    $($(p)[idx]).html(html + ' ');
 
             // html = "";
-
-            var n = document.createElement('p');
-            $(n).html(html);
-            var m = document.createElement('p');
-            $(m).html(replaceNonFormattedText($($(p)[idx]).html()));
-             $(m).html( $(m).html().replaceAll('<ct>', '<u>')) // try
-             $(m).html( $(m).html().replaceAll('</ct>', '</u>')) // try
-            var mHtml = "";
-            for (mh of $(m).children()) {
-                if ($(mh).prop("tagName") == "U") {
-                    mHtml += $(mh).text().split(/(?<=\s)/).map(function (x) {
-                       return `<u style="text-decoration-line: none;border-bottom: 2px solid yellow;">${x}</u>`
-                        
-                    }).join('');
-                } else if ($(mh).prop("tagName") == "STRONG") {
-                    mHtml += $(mh).text().split(/(?<=\s)/).map(x =>
-                        `<strong><u style="text-decoration-line: none;border-bottom: 2px solid red;">${x}</u></strong>`
-                    ).join('');
-                }
-            }
-            $(m).html(mHtml);
-            var r = document.createElement('p');
-            $(r).html(mHtml);
-
-            var jj = 0;
-            var ii = 0;
-            var mLength = $(m).children().length;
-            var toBeUpdate = [];
-            // for (var ii = 0; ii < $(n).children().length; ii++) {
-            var wording = "";
-            var stack = [];
-            var group = [];
-            do {
-                if (jj == $(m).children().length) {
-                    break;
-                }
-                if ($(m).children()[jj].innerText.trim() == '') {
-                    //$($(r).children()[jj]).prop('outerHTML', $(m).children()[jj].innerText.replace(' ', '|'));
-                    //$($(r).children()[jj]).css('border-bottom', '2px solid yellow;');
-                    toBeUpdate.push({ 'jj': jj, 'html': $(r).children()[jj].innerText });
-                    jj++;
-                    continue;
-                }
-
-                var jjList = [];
-                var textt = "";
-                do {
-                    textt += $(m).children()[jj].innerText.trim();
-                    do {
-                        if (ii < $(n).children().length && $(n).children()[ii].innerText.trim() == '') {
-                            ii++;
-                        } else {
-                            break;
-                        }
-                    } while (true);
-                    if ($(m).children()[jj].innerText.trim() == '') {
-                        continue;
-                    }
-
-                    if (textt == $(n).children()[ii].innerText) {
-                        jjList.push(jj);
-                        group.push({ 'jjList': jjList, 'ii': ii });
-                        ii++;
-                        jj++;
-                        break;
-                    } else {
-                        jjList.push(jj);
-                        jj++;
-                    }
-                } while (true);
-
-            } while (jj < mLength)
-
-            for (let q = 0; q < group.length; q++) {
-                for (let qq = 0; qq < group[q].jjList.length; qq++) {
-                    var qqq = $($(m).children()[group[q].jjList[qq]]);
-                    qqq.css('border-bottom', $($(n).children()[group[q].ii]).css('border-bottom'))
-                    //if (qqq.text().endsWith(' ')) {
-                    //    //qqq.text(qqq.text().trim());
-                    //    //qqq.prop('outerHTML', qqq.prop('outerHTML') + ' ');
-                    //    if (qqq.prop('tagName') == 'STRONG') {
-                    //        qqq.prop('outerHTML', qqq.prop('outerHTML') + '<strong> <u></u><strong>');
-                    //    }
-                    //} else if (qqq.text().endsWith(' ') && qqq.prop('tagName') == 'STRONG') {
-                    //    qqq.prop('outerHTML', qqq.prop('outerHTML') + '<strong> <u></u><strong>');
-
-                    //}
-                }
-            }
-            html = $(m).html();
-            html = html.replaceAll(' </u>', '</u><ct> </ct>');
-            //html = html.replaceAll('<u style="text-decoration-line: none;border-bottom: 2px solid yellow;"> </u>', '<ct> </ct>')
-            //html = html.replaceAll('</u> <u', '</u><ct> </ct><u')
-
-            //var html = $(m).html();
-            $($(p)[idx]).html(html);
-            html = "";
-
-
         }
     }
 
@@ -887,4 +814,67 @@
         var cleanedString = inputString.replace(/[. :;()[\]{}]+$/g, '');
         return cleanedString;
     }
+
+    function findAllExactTextPositionsOnScreen(targetText) {
+        let textNodes = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+        let regex = new RegExp('\\b' + targetText + '\\b', 'g');
+        let positions = [];
+
+        while (textNodes.nextNode()) {
+            const matches = [...textNodes.currentNode.textContent.matchAll(regex)];
+
+            for (const match of matches) {
+                const offset = match.index;
+                const range = document.createRange();
+                range.setStart(textNodes.currentNode, offset);
+                range.setEnd(textNodes.currentNode, offset + targetText.length);
+                const clientRects = range.getClientRects();
+
+                if (clientRects.length > 0) {
+                    positions.push({
+                        x: clientRects[0].left + window.scrollX,
+                        y: clientRects[0].top + window.scrollY,
+                        offset: offset,
+                        width: clientRects[0].width,
+                        height: clientRects[0].height
+                    });
+                }
+            }
+        }
+
+        return positions;
+    }
+
+    function removeDivsByClassName(className) {
+        console.log(className);
+        var elements = document.getElementsByClassName(className);
+        // Convert the HTMLCollection to an array (optional but helpful for looping)
+        var elementsArray = Array.from(elements);
+
+        console.log(elementsArray.length);
+        for (var i = 0; i < elementsArray.length; i++) {
+            var element = elementsArray[i];
+            element.parentNode.removeChild(element);
+        }
+    }
+    function createDivAtPositionWithSize(parentId, mispelled, x, y, width, height) {
+        // Create a new div element
+        var div = document.createElement('div');
+
+        // Set the position and size of the div using CSS
+        div.style.position = 'absolute';
+        div.style.left = x + 'px';
+        div.style.top = y + 'px';
+        div.style.width = width + 'px';
+        div.style.height = height + 'px';
+        div.className = parentId;
+        // Add content or styles to the div as needed
+        div.style.zIndex = '-100000000';
+        div.style.backgroundColor = 'rgba(255, 255, 0, 0.5);';
+        div.style.display = 'block';
+        div.style.borderBottom = mispelled == true ? '2px solid red' : '2px solid green';
+        // Append the div to the document's body
+        document.body.appendChild(div);
+    }
+
 </script>
