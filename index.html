@@ -165,7 +165,12 @@
     <script src="https://sapling.ai/static/js/sapling-sdk-v1.0.5.min.js"></script>
 
     <script>
-
+        var ignoreTextLocal = [];
+        if (localStorage.getItem('ignoreTextLocal') == null) {
+            localStorage.setItem('ignoreTextLocal', JSON.stringify(ignoreTextLocal));
+        } else {
+            ignoreTextLocal = JSON.parse(localStorage.getItem('ignoreTextLocal'));
+        }
         var typo = null;
         var isRun = false;
         document.addEventListener("DOMContentLoaded", function () {
@@ -203,6 +208,9 @@
     <div id="editor5"></div>
 
     <div id="ql-contextmenu" class="ql-contextmenu">
+        <button class="ql-contextmenu-btn" id="ignoreText" onclick="addToDictionary()">
+            <i class="ti ti-vocabulary"></i><span id="ignoreTextSpan"></span>
+        </button>
         <button class="ql-contextmenu-btn" id="insertImage" onclick="insertImage()">
             <i class="ti ti-photo"></i>Insert Image here.
         </button>
@@ -475,6 +483,7 @@
                 tempState = '';
                 $('#insertImage').hide();
             }
+            $('#ignoreTextSpan').text('Ignore "' + getSelectedText().trim() + '"');
             $('.ql-contextmenu').css('left', event.clientX);
             $('.ql-contextmenu').css('top', event.clientY);
             $('.ql-contextmenu').css('position', 'fixed');
@@ -596,7 +605,6 @@
                 ctrlPressed = true;
             }
         })
-
         $('#editor4').on('keyup', function (e) {
             if (e.keyCode == 13) {
                 return;
@@ -766,7 +774,7 @@
             }
             htmlArray = text.map(function (word) {
                 word = trimSpecialCharacters(word).toLowerCase();
-                var correct = typo.check(word);
+                var correct = typo.check(word) || ignoreTextLocal.includes(word);
                 var className = correct ? 'border-bottom: 2px solid green;' : 'text-decoration-line: none;border-bottom: 2px solid red;';
 
                 if (!correct) {
@@ -809,6 +817,7 @@
         return replacedText;
     }
 
+    
     function trimSpecialCharacters(inputString) {
         // Use the regular expression to replace the specified characters with an empty string
         var cleanedString = inputString.replace(/[. :;()[\]{}]+$/g, '');
@@ -875,6 +884,27 @@
         div.style.borderBottom = mispelled == true ? '2px solid red' : '2px solid green';
         // Append the div to the document's body
         document.body.appendChild(div);
+    }
+
+    function getSelectedText() {
+        var text = '';
+        if (window.getSelection) {
+            text = window.getSelection().toString();
+        } else if (document.selection && document.selection.type != 'Control') {
+            text = document.selection.createRange().text;
+        }
+        return text;
+    }
+    function addToDictionary() {
+        ignoreTextLocal.push(getSelectedText().trim());
+
+        localStorage.setItem('ignoreTextLocal', JSON.stringify(ignoreTextLocal));
+        $('.ql-contextmenu').hide();
+        checkAndreturn($('#editor > .ql-editor')[0]);
+        checkAndreturn($('#editor2 > .ql-editor')[0]);
+        checkAndreturn($('#editor3 > .ql-editor')[0]);
+        checkAndreturn($('#editor4 > .ql-editor')[0]);
+        checkAndreturn($('#editor5 > .ql-editor')[0]);
     }
 
 </script>
