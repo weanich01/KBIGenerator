@@ -208,10 +208,10 @@
     <div id="editor5"></div>
 
     <div id="ql-contextmenu" class="ql-contextmenu">
-        <button class="ql-contextmenu-btn" id="ignoreText" onclick="ignoreText()">
+        <button class="ql-contextmenu-btn" id="ignoreText">
             <i class="ti ti-vocabulary"></i><span id="ignoreTextSpan"></span>
         </button>
-        <button class="ql-contextmenu-btn" id="addToDict" onclick="addToDictionary()">
+        <button class="ql-contextmenu-btn" id="addToDict">
             <i class="ti ti-vocabulary"></i><span id="addToDictSpan"></span>
         </button>
         <button class="ql-contextmenu-btn" id="insertImage" onclick="insertImage()">
@@ -461,8 +461,6 @@
         }
     }
 
-    var targetElementText = null;
-    var targetElement = null;
     $(document).ready(function () {
         $('.ql-contextmenu').hide();
         //$(document).spellAsYouType();
@@ -490,7 +488,7 @@
                 $('#insertImage').hide();
             }
             const elements = document.getElementsByClassName(tempState);
-            targetElement = null;
+            var targetElement = null;
             // Loop through the elements and check their positions
             for (let i = 0; i < elements.length; i++) {
                 const element = elements[i];
@@ -508,12 +506,18 @@
                 targetElementText = $(targetElement).data('text');
                 $('#ignoreText').show();
                 $('#ignoreTextSpan').text('Ignore "' + $(targetElement).data('text') + '"');
+                $('#ignoreText').unbind('click');
+                console.log(targetElement);
+                $('#ignoreText').bind('click', { 'targetElement': targetElement }, ignoreText);
+
             } else {
                 $('#ignoreText').hide();
             }
             if (targetElement != null) {
                 $('#addToDict').show();
                 $('#addToDictSpan').text('Add "' + $(targetElement).data('text') + '" To Dictionary');
+                $('#addToDict').unbind('click');
+                $('#addToDict').bind('click', { 'targetElement': targetElement }, addToDictionary);
             } else {
                 $('#addToDict').hide();
             }
@@ -822,10 +826,10 @@
         var cleanedString = inputString.replace(/[. :;()[\]{}]+$/g, '');
         return cleanedString;
     }
-
     function findAllExactTextPositionsOnScreen(targetText) {
         let textNodes = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
-        let regex = new RegExp('\\b' + targetText + '\\b', 'g');
+        // Use the 'i' flag in the regular expression to make the search case-insensitive
+        let regex = new RegExp(targetText, 'gi');
         let positions = [];
 
         while (textNodes.nextNode()) {
@@ -844,7 +848,7 @@
                         y: clientRects[0].top + window.scrollY,
                         offset: offset,
                         width: clientRects[0].width,
-                        height: clientRects[0].height
+                        height: clientRects[0].height,
                     });
                 }
             }
@@ -852,6 +856,7 @@
 
         return positions;
     }
+
 
     function removeDivsByClassName(className) {
         console.log(className);
@@ -866,6 +871,12 @@
         }
     }
     function createDivAtPositionWithSize(parentId, word, mispelled, x, y, width, height) {
+        const existingDiv = document.querySelector('.' + parentId + '[data-x="' + x + '"][data-y="' + y + '"]');
+
+        if (existingDiv) {
+            // Div with the same position already exists, do not create a new one.
+            return;
+        }
         // Create a new div element
         var div = document.createElement('div');
 
@@ -883,6 +894,10 @@
         div.style.borderBottom = mispelled == true ? '2px solid red' : '2px solid green';
         div.dataset.text = word;
         // Append the div to the document's body
+        // Set data attributes to store the position
+        div.dataset.x = x;
+        div.dataset.y = y;
+
         document.body.appendChild(div);
     }
 
@@ -896,14 +911,15 @@
         return text;
     }
 
-    function ignoreText() {
-        $(targetElement)[0].remove();
-        targetElement = null;
+    function ignoreText(event) {
+        let targetElement = event.data.targetElement;
+        console.log(targetElement);
+        $(targetElement).remove();
         $('.ql-contextmenu').hide();
     }
-    function addToDictionary() {
-        ignoreTextLocal.push(targetElementText);
-        targetElementText = null;
+    function addToDictionary(event) {
+        let targetElement = event.data.targetElement;
+        ignoreTextLocal.push($(targetElement).text());
 
         localStorage.setItem('ignoreTextLocal', JSON.stringify(ignoreTextLocal));
         $('.ql-contextmenu').hide();
