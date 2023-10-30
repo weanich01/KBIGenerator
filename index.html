@@ -829,7 +829,7 @@
     function findAllExactTextPositionsOnScreen(targetText) {
         let textNodes = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
         // Use the 'i' flag in the regular expression to make the search case-insensitive
-        let regex = new RegExp(targetText, 'gi');
+        let regex = new RegExp('\\b' + targetText + '\\b', 'gi');
         let positions = [];
 
         while (textNodes.nextNode()) {
@@ -858,6 +858,7 @@
     }
 
 
+
     function removeDivsByClassName(className) {
         console.log(className);
         var elements = document.getElementsByClassName(className);
@@ -866,7 +867,7 @@
 
         console.log(elementsArray.length);
         for (var i = 0; i < elementsArray.length; i++) {
-            
+
             var element = elementsArray[i];
             if ($(element).css('border-bottom').includes('none')) {
                 continue;
@@ -918,7 +919,7 @@
     function ignoreText(event) {
         let targetElement = event.data.targetElement;
         console.log(targetElement);
-        $(targetElement).css('border-bottom','none');
+        $(targetElement).css('border-bottom', 'none');
         $('.ql-contextmenu').hide();
     }
     function addToDictionary(event) {
