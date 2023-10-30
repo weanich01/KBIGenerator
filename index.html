@@ -866,7 +866,11 @@
 
         console.log(elementsArray.length);
         for (var i = 0; i < elementsArray.length; i++) {
+            
             var element = elementsArray[i];
+            if ($(element).css('border-bottom').includes('none')) {
+                continue;
+            }
             element.parentNode.removeChild(element);
         }
     }
@@ -914,7 +918,7 @@
     function ignoreText(event) {
         let targetElement = event.data.targetElement;
         console.log(targetElement);
-        $(targetElement).remove();
+        $(targetElement).css('border-bottom','none');
         $('.ql-contextmenu').hide();
     }
     function addToDictionary(event) {
