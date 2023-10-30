@@ -923,7 +923,7 @@
     }
     function addToDictionary(event) {
         let targetElement = event.data.targetElement;
-        ignoreTextLocal.push($(targetElement).text());
+        ignoreTextLocal.push($(targetElement).data('text'));
 
         localStorage.setItem('ignoreTextLocal', JSON.stringify(ignoreTextLocal));
         $('.ql-contextmenu').hide();
