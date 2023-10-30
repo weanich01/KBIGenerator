@@ -64,13 +64,13 @@
         .ql-contextmenu {
             border: 2px solid #cacaca;
             background: #ffffff;
-            width: 160px;
+            width: auto;
         }
 
         .ql-contextmenu-btn {
             background-color: white !important;
             z-index: 10000;
-            width: 150px;
+            width: 98%;
             text-align: left;
             display: block;
             font-size: 14px;
@@ -139,8 +139,8 @@
         }
 
         #editor, #editor2 {
-            height: 60px !important;
             min-height: 60px !important;
+            height: auto;
         }
         /*.pre {
             white-space: pre-wrap !important;
@@ -208,8 +208,11 @@
     <div id="editor5"></div>
 
     <div id="ql-contextmenu" class="ql-contextmenu">
-        <button class="ql-contextmenu-btn" id="ignoreText" onclick="addToDictionary()">
+        <button class="ql-contextmenu-btn" id="ignoreText" onclick="ignoreText()">
             <i class="ti ti-vocabulary"></i><span id="ignoreTextSpan"></span>
+        </button>
+        <button class="ql-contextmenu-btn" id="addToDict" onclick="addToDictionary()">
+            <i class="ti ti-vocabulary"></i><span id="addToDictSpan"></span>
         </button>
         <button class="ql-contextmenu-btn" id="insertImage" onclick="insertImage()">
             <i class="ti ti-photo"></i>Insert Image here.
@@ -457,6 +460,9 @@
             $(quill5.getModule('toolbar').controls[0][1]).click()
         }
     }
+
+    var targetElementText = null;
+    var targetElement = null;
     $(document).ready(function () {
         $('.ql-contextmenu').hide();
         //$(document).spellAsYouType();
@@ -483,7 +489,34 @@
                 tempState = '';
                 $('#insertImage').hide();
             }
-            $('#ignoreTextSpan').text('Ignore "' + getSelectedText().trim() + '"');
+            const elements = document.getElementsByClassName(tempState);
+            targetElement = null;
+            // Loop through the elements and check their positions
+            for (let i = 0; i < elements.length; i++) {
+                const element = elements[i];
+                const rect = element.getBoundingClientRect();
+
+                // Check if the target coordinates are within the bounding box of the element
+                if (event.clientX >= rect.left && event.clientX <= rect.right && event.clientY >= rect.top && event.clientY <= rect.bottom) {
+                    // The element with the specified class at the target coordinates is found
+                    console.log('Found element:', element);
+                    targetElement = element;
+                    break; // If you want to stop searching after finding the first match
+                }
+            }
+            if (targetElement != null) {
+                targetElementText = $(targetElement).data('text');
+                $('#ignoreText').show();
+                $('#ignoreTextSpan').text('Ignore "' + $(targetElement).data('text') + '"');
+            } else {
+                $('#ignoreText').hide();
+            }
+            if (targetElement != null) {
+                $('#addToDict').show();
+                $('#addToDictSpan').text('Add "' + $(targetElement).data('text') + '" To Dictionary');
+            } else {
+                $('#addToDict').hide();
+            }
             $('.ql-contextmenu').css('left', event.clientX);
             $('.ql-contextmenu').css('top', event.clientY);
             $('.ql-contextmenu').css('position', 'fixed');
@@ -514,76 +547,42 @@
         }
 
         $('#editor').on('keyup', function (e) {
-            if (e.keyCode === 13) {
-                e.preventDefault();
+            if (e.keyCode == 13) {
                 return;
             }
-            if (!ctrlPressed) {
-                checkAndreturn(e.target);
-            }
-            if (e.ctrlKey && e.keyCode == 17) {
-                return;
-            }
-            if (e.keyCode != 32 && !ctrlPressed) {
-                checkAndreturn(e.target);
-            }
-
-            if (e.keyCode == 86 && ctrlPressed) {
-                checkAndreturn(e.target);
+            if (e.keyCode == 17) {
                 ctrlPressed = false;
-            }
-            if (e.ctrlKey) {
-                ctrlPressed = false;
-            }
-        })
-
-        $('#editor2').on('keyup', function (e) {
-            if (e.keyCode === 13) {
-                e.preventDefault();
-                return;
-            }
-            if (!ctrlPressed) {
-                checkAndreturn(e.target);
-            }
-            if (e.ctrlKey && e.keyCode == 17) {
-                return;
-            }
-            if (e.keyCode != 32 && !ctrlPressed) {
-                checkAndreturn(e.target);
-            }
-
-            if (e.keyCode == 86 && ctrlPressed) {
-                checkAndreturn(e.target);
-                ctrlPressed = false;
-            }
-            if (e.ctrlKey) {
-                ctrlPressed = false;
+            } else {
+                if (!ctrlPressed) {
+                    checkAndreturn(e.target);
+                }
             }
         })
 
         $('#editor').on('keydown', function (e) {
-            if (e.keyCode === 13) {
-                e.preventDefault();
-                return;
-            }
-
-            if (e.ctrlKey) {
+            if (e.keyCode == 17) {
                 ctrlPressed = true;
             }
-
-
         })
+
+        $('#editor2').on('keyup', function (e) {
+            if (e.keyCode == 13) {
+                return;
+            }
+            if (e.keyCode == 17) {
+                ctrlPressed = false;
+            } else {
+                if (!ctrlPressed) {
+                    checkAndreturn(e.target);
+                }
+            }
+        })
+
         $('#editor2').on('keydown', function (e) {
-            if (e.keyCode === 13) {
-                e.preventDefault();
-                return;
-            }
-
-            if (e.ctrlKey) {
+            if (e.keyCode == 17) {
                 ctrlPressed = true;
             }
         })
-
 
 
         $('#editor3').on('keyup', function (e) {
@@ -782,7 +781,7 @@
                     console.log(positions.length);
                     if (positions != null && positions.length > 0) {
                         positions.forEach((position, index) => {
-                            createDivAtPositionWithSize(htmlElement.parentElement.id, true, position.x, position.y, position.width, position.height);
+                            createDivAtPositionWithSize(htmlElement.parentElement.id, word, true, position.x, position.y, position.width, position.height);
                         });
                     }
                 }
@@ -817,7 +816,7 @@
         return replacedText;
     }
 
-    
+
     function trimSpecialCharacters(inputString) {
         // Use the regular expression to replace the specified characters with an empty string
         var cleanedString = inputString.replace(/[. :;()[\]{}]+$/g, '');
@@ -866,7 +865,7 @@
             element.parentNode.removeChild(element);
         }
     }
-    function createDivAtPositionWithSize(parentId, mispelled, x, y, width, height) {
+    function createDivAtPositionWithSize(parentId, word, mispelled, x, y, width, height) {
         // Create a new div element
         var div = document.createElement('div');
 
@@ -882,6 +881,7 @@
         div.style.backgroundColor = 'rgba(255, 255, 0, 0.5);';
         div.style.display = 'block';
         div.style.borderBottom = mispelled == true ? '2px solid red' : '2px solid green';
+        div.dataset.text = word;
         // Append the div to the document's body
         document.body.appendChild(div);
     }
@@ -895,8 +895,15 @@
         }
         return text;
     }
+
+    function ignoreText() {
+        $(targetElement)[0].remove();
+        targetElement = null;
+        $('.ql-contextmenu').hide();
+    }
     function addToDictionary() {
-        ignoreTextLocal.push(getSelectedText().trim());
+        ignoreTextLocal.push(targetElementText);
+        targetElementText = null;
 
         localStorage.setItem('ignoreTextLocal', JSON.stringify(ignoreTextLocal));
         $('.ql-contextmenu').hide();
@@ -905,6 +912,22 @@
         checkAndreturn($('#editor3 > .ql-editor')[0]);
         checkAndreturn($('#editor4 > .ql-editor')[0]);
         checkAndreturn($('#editor5 > .ql-editor')[0]);
+    }
+
+    function generateUUID() { // Public Domain/MIT
+        var d = new Date().getTime();//Timestamp
+        var d2 = ((typeof performance !== 'undefined') && performance.now && (performance.now() * 1000)) || 0;//Time in microseconds since page-load or 0 if unsupported
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            var r = Math.random() * 16;//random number between 0 and 16
+            if (d > 0) {//Use timestamp until depleted
+                r = (d + r) % 16 | 0;
+                d = Math.floor(d / 16);
+            } else {//Use microseconds since page-load if supported
+                r = (d2 + r) % 16 | 0;
+                d2 = Math.floor(d2 / 16);
+            }
+            return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+        });
     }
 
 </script>
