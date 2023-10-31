@@ -195,9 +195,7 @@
 <body>
     <h1 style="text-align:center">KBI Generator</h1>
     <p class="section-header" contenteditable='false'><strong style='color: rgb(178, 107, 0); font-size: 16px;'>Version</strong></p>
-
     <div id="editor"></div>
-
     <p class="section-header" contenteditable='false'><strong style='color: rgb(178, 107, 0); font-size: 16px;'>Date</strong></p>
     <div id="editor2"></div>
     <p class="section-header" contenteditable='false'><strong style='color: rgb(178, 107, 0); font-size: 16px;'>Summary</strong></p>
@@ -214,10 +212,13 @@
         <button class="ql-contextmenu-btn" id="addToDict">
             <i class="ti ti-vocabulary"></i><span id="addToDictSpan"></span>
         </button>
+        <button class="ql-contextmenu-btn" id="deleteImage">
+            <i class="ti ti-photo"></i><span>Delete Image</span>
+        </button>
         <button class="ql-contextmenu-btn" id="insertImage" onclick="insertImage()">
             <i class="ti ti-photo"></i>Insert Image Here
         </button>
-        <button class="ql-contextmenu-btn"><i class="ti ti-presentation"></i>Show Mockup</button>
+        <button id="showMockup" class="ql-contextmenu-btn"><i class="ti ti-presentation"></i>Show Mockup</button>
         <button class="ql-contextmenu-btn"><i class="ti ti-file-export"></i>Generate KBI</button>
     </div>
     <div id="root"></div>
@@ -335,16 +336,59 @@
 
     //var previewBtn = document.querySelector('.ql-image');
     //previewBtn.innerHTML = "Insert Image Here.";
-    //var previewBtn = document.querySelector('.ql-preview');
-    //previewBtn.innerHTML = "Show Mockup";
-    //previewBtn.addEventListener('click', function () {
-    //    var x = "height=800px,width=800px;toolbar=0,location=50,menubar=0";
-    //    console.log(x);
-    //    var w = window.open('', '_blank', x);
-    //    //var w = window.open('new.html','_blank');
-    //    w.document.writeln(quill.container.firstChild.innerHTML);
+    //  var previewBtn = document.querySelector('.ql-preview');
+    //  previewBtn.innerHTML = "Show Mockup";
+    $('#showMockup').click(function () {
+        var x = "height=800px,width=800px;toolbar=0,location=50,menubar=0";
+        console.log(x);
 
-    //});
+        $('.ql-contextmenu').hide();
+        var w = window.open('', '_blank', x);
+        //var w = window.open('new.html','_blank');
+        var style = ".thumbnail {text-align:center} .ql-editor{white-space:pre-wrap!important;height:auto;font-family:Arial!important}p:empty:not(:focus)::before{content:attr(data-placeholder)}img{max-width:352px!important;max-height:210px!important;display:block!important;margin-left:auto!important;margin-right:auto!important}.ql-contextmenu{border:2px solid #cacaca;background:#fff;width:auto}.ql-contextmenu-btn{background-color:#fff!important;z-index:10000;width:98%;text-align:left;display:block;font-size:14px;border:none;padding:3px;margin:3px}button.ql-contextmenu-btn:hover{background-color:#e8e8e9!important}.section-header{margin-top:30px;display:inline-block}i{margin-right:5px}.ql-container{height:auto;min-height:200px}#text .correct{border-bottom:2px solid green}#text .misspelled{border-bottom:2px solid red}u{text-decoration-line:none}body,button,div,h1,h2,h3,h4,h5,h6,img,p,span,svg,u{font-family:Aerial!important}p{font-size:14px}p:blank:before{content:'abc'}div.ql-toolbar.ql-snow{border:none!important;display:inline-block}.ql-container.ql-snow{border:none!important}#editor,#editor2{min-height:60px!important;height:auto}"
+
+        var htmlPreview = "";
+        htmlPreview += "<style>" + style + "</style>" + htmlPreview;
+        htmlPreview += `<script>
+
+// Function to open the full-size image
+function openFullImage(imageSrc) {
+  var newWindow = window.open(imageSrc, '_blank');
+ console.log('call')
+  if (newWindow) {
+    newWindow.focus();
+  } else {
+    alert('Please allow pop-ups for this site to view the full-size image.');
+  }
+}
+
+var elementsWithClass = document.getElementsByClassName('open-image');
+
+// Loop through the elements and assign the click event handler
+for (var i = 0; i < elementsWithClass.length; i++) {
+  elementsWithClass[i].addEventListener('click', function(event) {
+    event.preventDefault(); // Prevent default link behavior for anchor tags
+    openFullImage(this.href || this.src);
+  });
+}
+
+<\/script>`;
+
+        htmlPreview += `<p class="section-header" contenteditable='false'><strong style='color: rgb(178, 107, 0); font-size: 16px;'>Version</strong></p>
+          <div id="editor">${quill.container.firstChild.innerHTML}</div>
+          <p class="section-header" contenteditable='false'><strong style='color: rgb(178, 107, 0); font-size: 16px;'>Date</strong></p>
+          <div id="editor2">${quill2.container.firstChild.innerHTML}</div>
+          <p class="section-header" contenteditable='false'><strong style='color: rgb(178, 107, 0); font-size: 16px;'>Summary</strong></p>
+          <div id="editor3">${quill3.container.firstChild.innerHTML}</div>
+          <p class="section-header" contenteditable='false'><strong style='color: rgb(178, 107, 0); font-size: 16px;'>Technical Background</strong></p>
+          <div id="editor4">${quill4.container.firstChild.innerHTML}</div>
+          <p class="section-header" contenteditable='false'><strong style='color: rgb(178, 107, 0); font-size: 16px;'>Resolution</strong></p>
+          <div id="editor5">${quill5.container.firstChild.innerHTML}</div>`;
+        htmlPreview = extractAndConvertImgsToDivs(htmlPreview);
+
+        w.document.writeln(htmlPreview);
+
+    });
 
     //var generateBtn = document.querySelector('.ql-generate');
     //generateBtn.innerHTML = "Generate KBI";
@@ -513,6 +557,7 @@
             } else {
                 $('#ignoreText').hide();
             }
+
             if (targetElement != null) {
                 $('#addToDict').show();
                 $('#addToDictSpan').text('Add "' + $(targetElement).data('text') + '" To Dictionary');
@@ -520,6 +565,30 @@
                 $('#addToDict').bind('click', { 'targetElement': targetElement }, addToDictionary);
             } else {
                 $('#addToDict').hide();
+            }
+
+            const imageElements = document.getElementsByTagName('img');
+            var targetImageElements = null;
+            // Loop through the elements and check their positions
+            for (let i = 0; i < imageElements.length; i++) {
+                const element = imageElements[i];
+                const rect = element.getBoundingClientRect();
+
+                // Check if the target coordinates are within the bounding box of the element
+                if (event.clientX >= rect.left && event.clientX <= rect.right && event.clientY >= rect.top && event.clientY <= rect.bottom) {
+                    // The element with the specified class at the target coordinates is found
+                    console.log('Found element:', imageElements);
+                    targetImageElements = imageElements;
+                    break; // If you want to stop searching after finding the first match
+                }
+            }
+
+            if (targetImageElements != null) {
+                $('#deleteImage').show();
+                $('#deleteImage').unbind('click');
+                $('#deleteImage').bind('click', { 'targetElement': targetImageElements }, deleteImage);
+            } else {
+                $('#deleteImage').hide();
             }
             $('.ql-contextmenu').css('left', event.clientX);
             $('.ql-contextmenu').css('top', event.clientY);
@@ -935,20 +1004,96 @@
         checkAndreturn($('#editor5 > .ql-editor')[0]);
     }
 
-    function generateUUID() { // Public Domain/MIT
-        var d = new Date().getTime();//Timestamp
-        var d2 = ((typeof performance !== 'undefined') && performance.now && (performance.now() * 1000)) || 0;//Time in microseconds since page-load or 0 if unsupported
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-            var r = Math.random() * 16;//random number between 0 and 16
-            if (d > 0) {//Use timestamp until depleted
-                r = (d + r) % 16 | 0;
-                d = Math.floor(d / 16);
-            } else {//Use microseconds since page-load if supported
-                r = (d2 + r) % 16 | 0;
-                d2 = Math.floor(d2 / 16);
-            }
-            return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+    function deleteImage(event) {
+        let targetElement = event.data.targetElement;
+        $(targetElement).remove();
+        $('.ql-contextmenu').hide();
+    }
+
+    function convertImgStringToDivString(imgString) {
+        // Create a temporary div element to parse the imgString
+        var tempDiv = document.createElement('div');
+        tempDiv.innerHTML = imgString;
+
+        // Create a div element with the class "thumbnail"
+        var divElement = document.createElement('div');
+        divElement.className = 'thumbnail';
+
+        // Find the img element within the parsed HTML
+        var imgElement = tempDiv.querySelector('img');
+        if (imgElement) {
+            // Create the anchor tag with the class "imagelink" and "internalimage"
+            var imgLink = document.createElement('a');
+            imgLink.className = 'imagelink';
+            imgLink.href = imgElement.src;
+            imgLink.target = '_blank';
+            imgLink.rel = 'noopener';
+            imgLink.className += " open-image";
+            // Clone the img element and add the "async" attribute
+            var clonedImg = imgElement.cloneNode(true);
+            clonedImg.setAttribute('decoding', 'async');
+            clonedImg.className += " open-image";
+            // Create the "internalimage" anchor tag
+            var internalLink = document.createElement('a');
+            internalLink.className = 'internalimage';
+            internalLink.href = imgElement.src;
+            internalLink.target = '_blank';
+            internalLink.rel = 'noopener';
+            internalLink.textContent = 'Click For Full Size';
+            internalLink.className += " open-image";
+            // Append elements to the divElement
+            imgLink.appendChild(clonedImg);
+            divElement.appendChild(imgLink);
+            divElement.appendChild(document.createElement('br'));
+            divElement.appendChild(document.createElement('br'));
+            divElement.appendChild(internalLink);
+            divElement.appendChild(document.createElement('p'));
+        }
+
+        // Convert the modified div to an HTML string
+        var divString = divElement.outerHTML;
+
+        return divString;
+    }
+
+    function extractImgStringsFromHtml(htmlString) {
+        var imgStrings = [];
+
+        // Create a temporary div element to parse the HTML string
+        var tempDiv = document.createElement('div');
+        tempDiv.innerHTML = htmlString;
+
+        // Find all img elements within the parsed HTML
+        var imgElements = tempDiv.querySelectorAll('img');
+
+        imgElements.forEach(function (imgElement) {
+            // Convert each img element to a string and add it to the imgStrings array
+            imgStrings.push(imgElement.outerHTML);
         });
+
+        return imgStrings;
+    }
+
+    function extractAndConvertImgsToDivs(htmlString) {
+        // Step 1: Extract all img tag strings
+        var imgTagRegex = /<img[^>]+>/g;
+        var imgTags = htmlString.match(imgTagRegex);
+
+        if (!imgTags) {
+            return htmlString; // No img tags found, return the original HTML
+        }
+
+        // Step 2: Convert each img tag string to the desired div string
+        var divStrings = imgTags.map(function (imgTag) {
+            return convertImgStringToDivString(imgTag);
+        });
+
+        // Step 3: Replace original img tag strings with the new div strings
+        for (var i = 0; i < imgTags.length; i++) {
+            htmlString = htmlString.replace(imgTags[i], divStrings[i]);
+        }
+
+        return htmlString;
     }
 
 </script>
