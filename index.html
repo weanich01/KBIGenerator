@@ -215,7 +215,7 @@
             <i class="ti ti-vocabulary"></i><span id="addToDictSpan"></span>
         </button>
         <button class="ql-contextmenu-btn" id="insertImage" onclick="insertImage()">
-            <i class="ti ti-photo"></i>Insert Image here.
+            <i class="ti ti-photo"></i>Insert Image Here
         </button>
         <button class="ql-contextmenu-btn"><i class="ti ti-presentation"></i>Show Mockup</button>
         <button class="ql-contextmenu-btn"><i class="ti ti-file-export"></i>Generate KBI</button>
@@ -274,7 +274,7 @@
         modules: {
             toolbar: toolbarOptions
         },
-        placeholder: 'Your text here...',
+        placeholder: 'Your Text Here',
         theme: 'snow'
     });
     quill.getModule('keyboard').bindings[13] = null;
@@ -282,7 +282,7 @@
         modules: {
             toolbar: toolbarOptions
         },
-        placeholder: 'Your text here...',
+        placeholder: 'Your Text Here',
         theme: 'snow'
     });
     quill2.getModule('keyboard').bindings[13] = null;
@@ -290,21 +290,21 @@
         modules: {
             toolbar: toolbarOptions
         },
-        placeholder: 'Your text here...',
+        placeholder: 'Your Text Here',
         theme: 'snow',
     });
     var quill4 = new Quill('#editor4', {
         modules: {
             toolbar: toolbarOptions
         },
-        placeholder: 'Your text here...',
+        placeholder: 'Your Text Here',
         theme: 'snow'
     });
     var quill5 = new Quill('#editor5', {
         modules: {
             toolbar: toolbarOptions
         },
-        placeholder: 'Your text here...',
+        placeholder: 'Your Text Here',
         theme: 'snow'
     });
 
@@ -381,7 +381,7 @@
             if (/^image\//.test(file.type)) {
                 saveToServer(file);
             } else {
-                console.warn('You could only upload images.');
+                console.warn('You could only upload images');
             }
         };
     }
