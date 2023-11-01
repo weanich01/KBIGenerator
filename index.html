@@ -164,7 +164,7 @@
         /* set font-size picker */
         .ql-size {
             width: 30px !important;
-            font-size:12.5px!important;
+            font-size: 12.5px !important;
         }
 
             .ql-size > .ql-picker-label {
@@ -176,35 +176,33 @@
             .ql-size > .ql-picker-options {
                 width: 40px !important;
                 border: 1px solid black !important;
-                padding:0px!important;
-                
+                padding: 0px !important;
             }
 
-            .ql-size > .ql-picker-options > .ql-picker-item {
-                width: 100%!important;
-                display:block!important;
-                text-align:center
-            }
-
-                .ql-size > .ql-picker-options > .ql-picker-item:hover {
+                .ql-size > .ql-picker-options > .ql-picker-item {
                     width: 100% !important;
                     display: block !important;
-                    text-align: center;
-                    background-color: rgb(29,139,245);
-                    color:white;
-                    
+                    text-align: center
                 }
+
+                    .ql-size > .ql-picker-options > .ql-picker-item:hover {
+                        width: 100% !important;
+                        display: block !important;
+                        text-align: center;
+                        background-color: rgb(29,139,245);
+                        color: white;
+                    }
+
         .ql-snow .ql-picker:not(.ql-color-picker):not(.ql-icon-picker) svg {
             /*right:3px!important*/
-        
         }
 
-        .ql-formats{
-            margin-right:0px!important;
+        .ql-formats {
+            margin-right: 0px !important;
         }
 
-        .ql-color{
-            margin-left:14px;
+        .ql-color {
+            margin-left: 14px;
         }
         /* end set font-size picker*/
         /*.pre {
@@ -335,7 +333,7 @@
         // ['preview'],
         //  ['generate'],
         ['bold'],        // toggled buttons
-       
+
         [{
             'size': ["10px",
                 "12px",
@@ -694,99 +692,110 @@ for (var i = 0; i < elementsWithClass.length; i++) {
             }, 200); // Will do the ajax stuff after 1000 ms, or 1 s
         }
 
+        
+        var ctrlKeyDown1 = false;
         $('#editor').on('keyup', function (e) {
-            if (e.keyCode == 13) {
-                return;
-            }
-            if (e.keyCode == 17) {
-                ctrlPressed = false;
+            if (event.ctrlKey) {
+                // do nothing
             } else {
-                if (!ctrlPressed) {
-                    checkAndreturn(e.target);
+                if (event.key.length === 1) {
+                    if (ctrlKeyDown1) {
+                        ctrlKeyDown1 = false;
+                    } else {
+                        checkAndreturn(e.target);
+                    }
                 }
             }
         })
 
         $('#editor').on('keydown', function (e) {
-            if (e.keyCode == 17) {
-                ctrlPressed = true;
+            if (event.key === 'Control') {
+                ctrlKeyDown1 = true;
             }
         })
 
+        var ctrlKeyDown2 = false;
         $('#editor2').on('keyup', function (e) {
-            if (e.keyCode == 13) {
-                return;
-            }
-            if (e.keyCode == 17) {
-                ctrlPressed = false;
+           if (event.ctrlKey) {
+                // do nothing
             } else {
-                if (!ctrlPressed) {
-                    checkAndreturn(e.target);
+                if (event.key.length === 1) {
+                    if (ctrlKeyDown2) {
+                        ctrlKeyDown2 = false;
+                    } else {
+                        checkAndreturn(e.target);
+                    }
                 }
             }
         })
 
         $('#editor2').on('keydown', function (e) {
-            if (e.keyCode == 17) {
-                ctrlPressed = true;
+            if (event.key === 'Control') {
+                ctrlKeyDown2 = true;
             }
         })
 
-
+        let ctrlKeyDown3 = false;
         $('#editor3').on('keyup', function (e) {
-            if (e.keyCode == 13) {
-                return;
+
+            if (event.ctrlKey) {
+                // do nothing
+            } else {
+                if (event.key.length === 1) {
+                    if (ctrlKeyDown3) {
+                        ctrlKeyDown3 = false;
+                    } else {
+                        checkAndreturn(e.target);
+                    }
+                }
             }
-            checkAndreturn(e.target);
-            //if (e.keyCode == 17) {
-            //    ctrlPressed = false;
-            //} else {
-            //    if (!ctrlPressed) {
-            //        checkAndreturn(e.target);
-            //    }
-            //}
         })
 
         $('#editor3').on('keydown', function (e) {
-            if (e.keyCode == 17) {
-                ctrlPressed = true;
+            if (event.key === 'Control') {
+                ctrlKeyDown3 = true;
             }
         })
+        
+        let ctrlKeyDown4 = false;
         $('#editor4').on('keyup', function (e) {
-            if (e.keyCode == 13) {
-                return;
-            }
-            if (e.keyCode == 17) {
-                ctrlPressed = false;
+            if (event.ctrlKey) {
+                // do nothing
             } else {
-                if (!ctrlPressed) {
-                    checkAndreturn(e.target);
+                if (event.key.length === 1) {
+                    if (ctrlKeyDown4) {
+                        ctrlKeyDown4 = false;
+                    } else {
+                        checkAndreturn(e.target);
+                    }
                 }
             }
         })
 
         $('#editor4').on('keydown', function (e) {
-            if (e.keyCode == 17) {
-                ctrlPressed = true;
+            if (event.key === 'Control') {
+                ctrlKeyDown4 = true;
             }
         })
-
+        
+        let ctrlKeyDown5 = false;
         $('#editor5').on('keyup', function (e) {
-            if (e.keyCode == 13) {
-                return;
-            }
-            if (e.keyCode == 17) {
-                ctrlPressed = false;
+            if (event.ctrlKey) {
+                // do nothing
             } else {
-                if (!ctrlPressed) {
-                    checkAndreturn(e.target);
+                if (event.key.length === 1) {
+                    if (ctrlKeyDown5) {
+                        ctrlKeyDown5 = false;
+                    } else {
+                        checkAndreturn(e.target);
+                    }
                 }
             }
         })
 
         $('#editor5').on('keydown', function (e) {
-            if (e.keyCode == 17) {
-                ctrlPressed = true;
+            if (event.key === 'Control') {
+                ctrlKeyDown5 = true;
             }
         })
         //document.getElementById("editor2").addEventListener("input", function () {
