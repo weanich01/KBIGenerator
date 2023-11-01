@@ -2,7 +2,6 @@
 <html>
 <head>
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-    <link href="https://fonts.cdnfonts.com/css/arial-2" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@tabler/icons@latest/icons-react/dist/index.umd.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
     <style type="text/css">
@@ -343,21 +342,63 @@
         [{ 'color': [] }],
 
     ];
+
+     var textToolbarOptions = [
+        ['underline'],
+        // ['preview'],
+        //  ['generate'],
+        ['bold'],        // toggled buttons
+
+        [{
+            'size': ["10px",
+                "12px",
+                "14px",
+                "16px"]
+        }],  // custom dropdown
+        [{ 'color': [] }],
+
+    ];
+
+    var textFormats = [
+        'background',
+        'bold',
+        'color',
+        'font',
+        'code',
+        'italic',
+        'link',
+        'size',
+        'strike',
+        'script',
+        'underline',
+        'blockquote',
+        'header',
+        'indent',
+        'list',
+        'align',
+        'direction',
+        'code-block',
+        'formula'
+        // 'image'
+        // 'video'
+    ];
     var formatWhitelist = ['bold', 'underline'];
     var quill = new Quill('#editor', {
         modules: {
-            toolbar: toolbarOptions
+            toolbar: textToolbarOptions
         },
         placeholder: 'Your Text Here',
-        theme: 'snow'
+        theme: 'snow',
+        formats: textFormats
     });
     quill.getModule('keyboard').bindings[13] = null;
     var quill2 = new Quill('#editor2', {
         modules: {
-            toolbar: toolbarOptions
+            toolbar: textToolbarOptions
         },
         placeholder: 'Your Text Here',
-        theme: 'snow'
+        theme: 'snow',
+        formats: textFormats
     });
     quill2.getModule('keyboard').bindings[13] = null;
     var quill3 = new Quill('#editor3', {
@@ -560,10 +601,10 @@ for (var i = 0; i < elementsWithClass.length; i++) {
 
     function insertImage() {
         if (tempState == 'editor') {
-            $(quill.getModule('toolbar').controls[0][1]).click()
+            // $(quill.getModule('toolbar').controls[0][1]).click()
         }
         if (tempState == 'editor2') {
-            $(quill2.getModule('toolbar').controls[0][1]).click()
+            // $(quill2.getModule('toolbar').controls[0][1]).click()
         }
         if (tempState == 'editor3') {
             $(quill3.getModule('toolbar').controls[0][1]).click()
@@ -586,10 +627,14 @@ for (var i = 0; i < elementsWithClass.length; i++) {
 
             $('#insertImage').show();
             if (document.getElementById('editor').contains(event.target)) {
-                tempState = 'editor';
+                //tempState = 'editor';
+                tempState = '';
+                $('#insertImage').hide();
             }
             else if (document.getElementById('editor2').contains(event.target)) {
-                tempState = 'editor2';
+                //tempState = 'editor2';
+                tempState = '';
+                $('#insertImage').hide();
             }
             else if (document.getElementById('editor3').contains(event.target)) {
                 tempState = 'editor3';
@@ -692,9 +737,12 @@ for (var i = 0; i < elementsWithClass.length; i++) {
             }, 200); // Will do the ajax stuff after 1000 ms, or 1 s
         }
 
-        
+
         var ctrlKeyDown1 = false;
         $('#editor').on('keyup', function (e) {
+            if (event.key === "Enter" || event.keyCode === 13) {
+                event.preventDefault();
+            }
             if (event.ctrlKey) {
                 // do nothing
             } else {
@@ -709,6 +757,9 @@ for (var i = 0; i < elementsWithClass.length; i++) {
         })
 
         $('#editor').on('keydown', function (e) {
+            if (event.key === "Enter" || event.keyCode === 13) {
+                event.preventDefault();
+            }
             if (event.key === 'Control') {
                 ctrlKeyDown1 = true;
             }
@@ -716,7 +767,10 @@ for (var i = 0; i < elementsWithClass.length; i++) {
 
         var ctrlKeyDown2 = false;
         $('#editor2').on('keyup', function (e) {
-           if (event.ctrlKey) {
+            if (event.key === "Enter" || event.keyCode === 13) {
+                event.preventDefault();
+            }
+            if (event.ctrlKey) {
                 // do nothing
             } else {
                 if (event.key.length === 1) {
@@ -730,6 +784,9 @@ for (var i = 0; i < elementsWithClass.length; i++) {
         })
 
         $('#editor2').on('keydown', function (e) {
+            if (event.key === "Enter" || event.keyCode === 13) {
+                event.preventDefault();
+            }
             if (event.key === 'Control') {
                 ctrlKeyDown2 = true;
             }
@@ -756,7 +813,7 @@ for (var i = 0; i < elementsWithClass.length; i++) {
                 ctrlKeyDown3 = true;
             }
         })
-        
+
         let ctrlKeyDown4 = false;
         $('#editor4').on('keyup', function (e) {
             if (event.ctrlKey) {
@@ -777,7 +834,7 @@ for (var i = 0; i < elementsWithClass.length; i++) {
                 ctrlKeyDown4 = true;
             }
         })
-        
+
         let ctrlKeyDown5 = false;
         $('#editor5').on('keyup', function (e) {
             if (event.ctrlKey) {
@@ -913,6 +970,34 @@ for (var i = 0; i < elementsWithClass.length; i++) {
         observer3.observe($('.ql-size > .ql-picker-label')[2], config);
         observer4.observe($('.ql-size > .ql-picker-label')[3], config);
         observer5.observe($('.ql-size > .ql-picker-label')[4], config);
+
+
+         // Define the type of mutations to observe
+        const configMultiLine = { childList: true, subtree: true };
+        var xxx;
+        // prevent copy paste multiline
+        const observerMultiLine = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.type === 'childList') {
+                    var parent = $(mutation.target);
+                    if (parent.find('p').length > 1) {
+                        parent.empty();
+                    }
+                }
+            });
+        });
+        const observerMultiLine2 = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.type === 'childList') {
+                    var parent = $(mutation.target);
+                    if (parent.find('p').length > 1) {
+                        parent.empty();
+                    }
+                }
+            });
+        });
+        observerMultiLine.observe($('#editor > .ql-editor')[0],configMultiLine)
+        observerMultiLine.observe($('#editor2 > .ql-editor')[0],configMultiLine)
     }) // end document ready
     function checkAndreturn(htmlElement) {
         //get current cursor position
