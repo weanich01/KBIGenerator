@@ -1102,16 +1102,6 @@ for (var i = 0; i < elementsWithClass.length; i++) {
             if (text == null) {
                 break;
             }
-
-            let totalText = quill3.getText();
-            totalText = totalText.split(/(\s+)(?=\S)|\s+/).filter(Boolean);
-            let index = 0;
-            for (text of totalText) {
-                var length = text.length;
-                quill3.formatText(index, length, 'spanblock', true);
-                index += length;
-            }
-            return;
             htmlArray = text.map(function (word) {
                 word = trimSpecialCharacters(word).toLowerCase();
                 var correct = typo.check(word) || ignoreTextLocal.includes(word);
@@ -1136,10 +1126,6 @@ for (var i = 0; i < elementsWithClass.length; i++) {
 
             // html = "";
         }
-    }
-    function containsWhitespaceAmongCharacters(inputString) {
-        const regex = /\S\s+\S/;
-        return regex.test(inputString);
     }
 
     function replaceNonFormattedText(input) {
