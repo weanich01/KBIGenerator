@@ -409,7 +409,7 @@
         theme: 'snow',
     });
 
-    
+
     var quill4 = new Quill('#editor4', {
         modules: {
             toolbar: toolbarOptions
@@ -433,9 +433,12 @@
     });
     quill3.on("text-change", () => {
         checkAndreturn($('#editor3 > .ql-editor')[0])
+        checkAndreturn($('#editor4 > .ql-editor')[0])
+        checkAndreturn($('#editor5 > .ql-editor')[0])
     });
     quill4.on("text-change", () => {
         checkAndreturn($('#editor4 > .ql-editor')[0])
+        checkAndreturn($('#editor5 > .ql-editor')[0])
     });
     quill5.on("text-change", () => {
         checkAndreturn($('#editor5 > .ql-editor')[0])
@@ -947,14 +950,14 @@ for (var i = 0; i < elementsWithClass.length; i++) {
         observerMultiLine.observe($('#editor > .ql-editor')[0], configMultiLine)
         observerMultiLine.observe($('#editor2 > .ql-editor')[0], configMultiLine)
 
-        
+
 
         // Add an event listener for the 'resize' event
         window.addEventListener('resize', handleResize);
     }) // end document ready
 
     function handleResize() {
-            checkAndreturn($('#editor > .ql-editor')[0]);
+        checkAndreturn($('#editor > .ql-editor')[0]);
         checkAndreturn($('#editor2 > .ql-editor')[0]);
         checkAndreturn($('#editor3 > .ql-editor')[0]);
         checkAndreturn($('#editor4 > .ql-editor')[0]);
@@ -1066,7 +1069,8 @@ for (var i = 0; i < elementsWithClass.length; i++) {
             }
             htmlArray = text.map(function (word) {
                 word = word.trim();
-                var correct = typo.check(word) || ignoreTextLocal.includes(word);
+                var testword = removeNonAlphanumeric(word);
+                var correct = typo.check(testword) || ignoreTextLocal.includes(testword);
                 var className = correct ? 'border-bottom: 2px solid green;' : 'text-decoration-line: none;border-bottom: 2px solid red;';
 
                 if (!correct) {
@@ -1080,13 +1084,12 @@ for (var i = 0; i < elementsWithClass.length; i++) {
                 return `<u style="${className}">${word.trim()}</u>`;
 
             });
-            //if ($(htmlElement).find('u').length == htmlArray.length) {
-            //    console.log('=====');
-            //}
-            //    $($(p)[idx]).html(html + ' ');
-
-            // html = "";
         }
+    }
+
+    function removeNonAlphanumeric(inputString) {
+        // Use a regular expression to replace non-alphanumeric characters with an empty string
+        return inputString.replace(/[^a-zA-Z0-9]/g, '');
     }
 
     function replaceNonFormattedText(input) {
