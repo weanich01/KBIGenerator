@@ -408,6 +408,8 @@
         placeholder: 'Your Text Here',
         theme: 'snow',
     });
+
+    
     var quill4 = new Quill('#editor4', {
         modules: {
             toolbar: toolbarOptions
@@ -423,7 +425,21 @@
         theme: 'snow'
     });
 
-
+    quill.on("text-change", () => {
+        checkAndreturn($('#editor > .ql-editor')[0])
+    });
+    quill2.on("text-change", () => {
+        checkAndreturn($('#editor2 > .ql-editor')[0])
+    });
+    quill3.on("text-change", () => {
+        checkAndreturn($('#editor3 > .ql-editor')[0])
+    });
+    quill4.on("text-change", () => {
+        checkAndreturn($('#editor4 > .ql-editor')[0])
+    });
+    quill5.on("text-change", () => {
+        checkAndreturn($('#editor5 > .ql-editor')[0])
+    });
     //   WEBSPELLCHECKER.init({
     //	container: quill.root
     //});
@@ -750,7 +766,7 @@ for (var i = 0; i < elementsWithClass.length; i++) {
                     if (ctrlKeyDown1) {
                         ctrlKeyDown1 = false;
                     } else {
-                        checkAndreturn(e.target);
+                        //checkAndreturn(e.target);
                     }
                 }
             }
@@ -777,7 +793,7 @@ for (var i = 0; i < elementsWithClass.length; i++) {
                     if (ctrlKeyDown2) {
                         ctrlKeyDown2 = false;
                     } else {
-                        checkAndreturn(e.target);
+                        //checkAndreturn(e.target);
                     }
                 }
             }
@@ -792,69 +808,6 @@ for (var i = 0; i < elementsWithClass.length; i++) {
             }
         })
 
-        let ctrlKeyDown3 = false;
-        $('#editor3').on('keyup', function (e) {
-
-            if (event.ctrlKey) {
-                // do nothing
-            } else {
-                if (event.key.length === 1) {
-                    if (ctrlKeyDown3) {
-                        ctrlKeyDown3 = false;
-                    } else {
-                        checkAndreturn(e.target);
-                    }
-                }
-            }
-        })
-
-        $('#editor3').on('keydown', function (e) {
-            if (event.key === 'Control') {
-                ctrlKeyDown3 = true;
-            }
-        })
-
-        let ctrlKeyDown4 = false;
-        $('#editor4').on('keyup', function (e) {
-            if (event.ctrlKey) {
-                // do nothing
-            } else {
-                if (event.key.length === 1) {
-                    if (ctrlKeyDown4) {
-                        ctrlKeyDown4 = false;
-                    } else {
-                        checkAndreturn(e.target);
-                    }
-                }
-            }
-        })
-
-        $('#editor4').on('keydown', function (e) {
-            if (event.key === 'Control') {
-                ctrlKeyDown4 = true;
-            }
-        })
-
-        let ctrlKeyDown5 = false;
-        $('#editor5').on('keyup', function (e) {
-            if (event.ctrlKey) {
-                // do nothing
-            } else {
-                if (event.key.length === 1) {
-                    if (ctrlKeyDown5) {
-                        ctrlKeyDown5 = false;
-                    } else {
-                        checkAndreturn(e.target);
-                    }
-                }
-            }
-        })
-
-        $('#editor5').on('keydown', function (e) {
-            if (event.key === 'Control') {
-                ctrlKeyDown5 = true;
-            }
-        })
         //document.getElementById("editor2").addEventListener("input", function () {
         //    spellcheck();
         //}, false);
@@ -886,7 +839,6 @@ for (var i = 0; i < elementsWithClass.length; i++) {
             for (const mutation of mutationsList) {
                 if (mutation.type === 'attributes' && mutation.attributeName === 'data-value') {
                     const newValue = mutation.target.getAttribute('data-value');
-                    console.log(`data-value changed to: ${newValue}`);
                     var element = $(mutation.target);
                     element.html(newValue.replace('px', '') + element.html().slice(2));
                     // You can perform any actions you want here when the attribute changes.
@@ -897,7 +849,6 @@ for (var i = 0; i < elementsWithClass.length; i++) {
             for (const mutation of mutationsList) {
                 if (mutation.type === 'attributes' && mutation.attributeName === 'data-value') {
                     const newValue = mutation.target.getAttribute('data-value');
-                    console.log(`data-value changed to: ${newValue}`);
                     var element = $(mutation.target);
                     element.html(newValue.replace('px', '') + element.html().slice(2));
                     // You can perform any actions you want here when the attribute changes.
@@ -908,7 +859,6 @@ for (var i = 0; i < elementsWithClass.length; i++) {
             for (const mutation of mutationsList) {
                 if (mutation.type === 'attributes' && mutation.attributeName === 'data-value') {
                     const newValue = mutation.target.getAttribute('data-value');
-                    console.log(`data-value changed to: ${newValue}`);
                     var element = $(mutation.target);
                     element.html(newValue.replace('px', '') + element.html().slice(2));
                     // You can perform any actions you want here when the attribute changes.
@@ -919,7 +869,6 @@ for (var i = 0; i < elementsWithClass.length; i++) {
             for (const mutation of mutationsList) {
                 if (mutation.type === 'attributes' && mutation.attributeName === 'data-value') {
                     const newValue = mutation.target.getAttribute('data-value');
-                    console.log(`data-value changed to: ${newValue}`);
                     var element = $(mutation.target);
                     element.html(newValue.replace('px', '') + element.html().slice(2));
                     // You can perform any actions you want here when the attribute changes.
@@ -930,7 +879,6 @@ for (var i = 0; i < elementsWithClass.length; i++) {
             for (const mutation of mutationsList) {
                 if (mutation.type === 'attributes' && mutation.attributeName === 'data-value') {
                     const newValue = mutation.target.getAttribute('data-value');
-                    console.log(`data-value changed to: ${newValue}`);
                     var element = $(mutation.target);
                     console.log(element.html());
                     element.html(newValue.replace('px', '') + element.html().slice(2));
@@ -998,7 +946,21 @@ for (var i = 0; i < elementsWithClass.length; i++) {
         });
         observerMultiLine.observe($('#editor > .ql-editor')[0], configMultiLine)
         observerMultiLine.observe($('#editor2 > .ql-editor')[0], configMultiLine)
+
+        
+
+        // Add an event listener for the 'resize' event
+        window.addEventListener('resize', handleResize);
     }) // end document ready
+
+    function handleResize() {
+            checkAndreturn($('#editor > .ql-editor')[0]);
+        checkAndreturn($('#editor2 > .ql-editor')[0]);
+        checkAndreturn($('#editor3 > .ql-editor')[0]);
+        checkAndreturn($('#editor4 > .ql-editor')[0]);
+        checkAndreturn($('#editor5 > .ql-editor')[0]);
+    }
+
     function checkAndreturn(htmlElement) {
         //get current cursor position
         const sel = window.getSelection();
@@ -1109,7 +1071,6 @@ for (var i = 0; i < elementsWithClass.length; i++) {
 
                 if (!correct) {
                     var positions = findAllExactTextPositionsOnScreen(word);
-                    console.log(positions.length);
                     if (positions != null && positions.length > 0) {
                         positions.forEach((position, index) => {
                             createDivAtPositionWithSize(htmlElement.parentElement.id, word, true, position.x, position.y, position.width, position.height);
@@ -1208,7 +1169,7 @@ for (var i = 0; i < elementsWithClass.length; i++) {
         if (isNotAlphanumeric(escapedText)) {
             regex = new RegExp(escapedText, 'gi');
         } else {
-            
+
             regex = new RegExp('\\b' + escapedText + '\\b', 'gi');
         }
         let positions = [];
@@ -1241,12 +1202,10 @@ for (var i = 0; i < elementsWithClass.length; i++) {
 
 
     function removeDivsByClassName(className) {
-        console.log(className);
         var elements = document.getElementsByClassName(className);
         // Convert the HTMLCollection to an array (optional but helpful for looping)
         var elementsArray = Array.from(elements);
 
-        console.log(elementsArray.length);
         for (var i = 0; i < elementsArray.length; i++) {
 
             var element = elementsArray[i];
