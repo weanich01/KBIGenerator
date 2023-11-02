@@ -343,7 +343,7 @@
 
     ];
 
-     var textToolbarOptions = [
+    var textToolbarOptions = [
         ['underline'],
         // ['preview'],
         //  ['generate'],
@@ -972,12 +972,12 @@ for (var i = 0; i < elementsWithClass.length; i++) {
         observer5.observe($('.ql-size > .ql-picker-label')[4], config);
 
 
-         // Define the type of mutations to observe
+        // Define the type of mutations to observe
         const configMultiLine = { childList: true, subtree: true };
         var xxx;
         // prevent copy paste multiline
-        const observerMultiLine = new MutationObserver(function(mutations) {
-            mutations.forEach(function(mutation) {
+        const observerMultiLine = new MutationObserver(function (mutations) {
+            mutations.forEach(function (mutation) {
                 if (mutation.type === 'childList') {
                     var parent = $(mutation.target);
                     if (parent.find('p').length > 1) {
@@ -986,8 +986,8 @@ for (var i = 0; i < elementsWithClass.length; i++) {
                 }
             });
         });
-        const observerMultiLine2 = new MutationObserver(function(mutations) {
-            mutations.forEach(function(mutation) {
+        const observerMultiLine2 = new MutationObserver(function (mutations) {
+            mutations.forEach(function (mutation) {
                 if (mutation.type === 'childList') {
                     var parent = $(mutation.target);
                     if (parent.find('p').length > 1) {
@@ -996,8 +996,8 @@ for (var i = 0; i < elementsWithClass.length; i++) {
                 }
             });
         });
-        observerMultiLine.observe($('#editor > .ql-editor')[0],configMultiLine)
-        observerMultiLine.observe($('#editor2 > .ql-editor')[0],configMultiLine)
+        observerMultiLine.observe($('#editor > .ql-editor')[0], configMultiLine)
+        observerMultiLine.observe($('#editor2 > .ql-editor')[0], configMultiLine)
     }) // end document ready
     function checkAndreturn(htmlElement) {
         //get current cursor position
@@ -1103,7 +1103,7 @@ for (var i = 0; i < elementsWithClass.length; i++) {
                 break;
             }
             htmlArray = text.map(function (word) {
-                word = trimSpecialCharacters(word).toLowerCase();
+                word = word.trim();
                 var correct = typo.check(word) || ignoreTextLocal.includes(word);
                 var className = correct ? 'border-bottom: 2px solid green;' : 'text-decoration-line: none;border-bottom: 2px solid red;';
 
@@ -1153,10 +1153,64 @@ for (var i = 0; i < elementsWithClass.length; i++) {
         var cleanedString = inputString.replace(/[. :;()[\]{}]+$/g, '');
         return cleanedString;
     }
+    function escapeRegExp(inputString) {
+        // Define a list of characters to escape
+        const specialChars = /[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g;
+
+        return inputString.replace(specialChars, '\\$&');
+    }
+
+
+    //function findAllExactTextPositionsOnScreen(targetText) {
+    //     targetText = targetText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    //    let textNodes = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    //    // Use the 'i' flag in the regular expression to make the search case-insensitive
+    //    let regex = new RegExp('\\b' + targetText + '\\b', 'gi');
+    //    let positions = [];
+
+    //    while (textNodes.nextNode()) {
+    //        const matches = [...textNodes.currentNode.textContent.matchAll(regex)];
+
+    //        for (const match of matches) {
+    //            const offset = match.index;
+    //            const range = document.createRange();
+    //            range.setStart(textNodes.currentNode, offset);
+    //            range.setEnd(textNodes.currentNode, offset + targetText.length);
+    //            const clientRects = range.getClientRects();
+
+    //            if (clientRects.length > 0) {
+    //                positions.push({
+    //                    x: clientRects[0].left + window.scrollX,
+    //                    y: clientRects[0].top + window.scrollY,
+    //                    offset: offset,
+    //                    width: clientRects[0].width,
+    //                    height: clientRects[0].height,
+    //                });
+    //            }
+    //        }
+    //    }
+
+    //    return positions;
+    //}
+
+    function isNotAlphanumeric(inputString) {
+        // Use a regular expression to check for non-alphanumeric characters
+        const nonAlphanumericRegex = /[^a-zA-Z0-9]+/;
+        return nonAlphanumericRegex.test(inputString);
+    }
+
     function findAllExactTextPositionsOnScreen(targetText) {
         let textNodes = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
-        // Use the 'i' flag in the regular expression to make the search case-insensitive
-        let regex = new RegExp('\\b' + targetText + '\\b', 'gi');
+        // Escape the targetText for use in a regular expression
+        //const escapedText = targetText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const escapedText = targetText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        var regex = null;
+        if (isNotAlphanumeric(escapedText)) {
+            regex = new RegExp(escapedText, 'gi');
+        } else {
+            
+            regex = new RegExp('\\b' + escapedText + '\\b', 'gi');
+        }
         let positions = [];
 
         while (textNodes.nextNode()) {
