@@ -207,6 +207,10 @@
         /*.pre {
             white-space: pre-wrap !important;
         }*/
+
+        #editor > .ql-editor, #editor2 > .ql-editor{
+            white-space:nowrap!important
+        }
     </style>
     <!-- Create the editor container -->
     <!--<script src="https://svc.webspellchecker.net/spellcheck31/wscbundle/wscbundle.js"></script>-->
@@ -363,25 +367,32 @@
         'background',
         'bold',
         'color',
-        'font',
-        'code',
         'italic',
-        'link',
         'size',
-        'strike',
-        'script',
         'underline',
-        'blockquote',
-        'header',
         'indent',
         'list',
         'align',
         'direction',
-        'code-block',
-        'formula'
         // 'image'
         // 'video'
     ];
+
+    var articleFormats = [
+        'background',
+        'bold',
+        'color',
+        'italic',
+        'size',
+        'underline',
+        'indent',
+        'list',
+        'align',
+        'direction',
+        // 'image'
+        // 'video'
+    ];
+
     var formatWhitelist = ['bold', 'underline'];
     var quill = new Quill('#editor', {
         modules: {
@@ -407,6 +418,7 @@
         },
         placeholder: 'Your Text Here',
         theme: 'snow',
+        formats: articleFormats
     });
 
 
@@ -415,16 +427,18 @@
             toolbar: toolbarOptions
         },
         placeholder: 'Your Text Here',
-        theme: 'snow'
+        theme: 'snow',
+        formats: articleFormats
     });
     var quill5 = new Quill('#editor5', {
         modules: {
             toolbar: toolbarOptions
         },
         placeholder: 'Your Text Here',
-        theme: 'snow'
+        theme: 'snow',
+        formats: articleFormats
     });
-
+    // need to handle incase character more than 1 line
     quill.on("text-change", () => {
         checkAndreturn($('#editor > .ql-editor')[0])
     });
@@ -474,7 +488,7 @@
         $('.ql-contextmenu').hide();
         var w = window.open('', '_blank', x);
         //var w = window.open('new.html','_blank');
-        var style = ".thumbnail {text-align:center} .ql-editor{white-space:pre-wrap!important;height:auto;font-family:Arial!important}p:empty:not(:focus)::before{content:attr(data-placeholder)}img{max-width:352px!important;max-height:210px!important;display:block!important;margin-left:auto!important;margin-right:auto!important}.ql-contextmenu{border:2px solid #cacaca;background:#fff;width:auto}.ql-contextmenu-btn{background-color:#fff!important;z-index:10000;width:98%;text-align:left;display:block;font-size:14px;border:none;padding:3px;margin:3px}button.ql-contextmenu-btn:hover{background-color:#e8e8e9!important}.section-header{margin-top:30px;display:inline-block}i{margin-right:5px}.ql-container{height:auto;min-height:200px}#text .correct{border-bottom:2px solid green}#text .misspelled{border-bottom:2px solid red}u{text-decoration-line:none}body,button,div,h1,h2,h3,h4,h5,h6,img,p,span,svg,u{font-family:Arial!important}p{font-size:14px}p:blank:before{content:'abc'}div.ql-toolbar.ql-snow{border:none!important;display:inline-block}.ql-container.ql-snow{border:none!important}#editor,#editor2{min-height:60px!important;height:auto} body{margin:auto;max-width:770px}"
+        var style = ".thumbnail {text-align:center} .ql-editor{white-space:pre-wrap!important;height:auto;font-family:Arial!important}p:empty:not(:focus)::before{content:attr(data-placeholder)}img{max-width:352px!important;max-height:210px!important;display:block!important;margin-left:auto!important;margin-right:auto!important}.ql-contextmenu{border:2px solid #cacaca;background:#fff;width:auto}.ql-contextmenu-btn{background-color:#fff!important;z-index:10000;width:98%;text-align:left;display:block;font-size:14px;border:none;padding:3px;margin:3px}button.ql-contextmenu-btn:hover{background-color:#e8e8e9!important}.section-header{margin-top:30px;display:inline-block}i{margin-right:5px}.ql-container{height:auto;min-height:200px}#text .correct{border-bottom:2px solid green}#text .misspelled{border-bottom:2px solid red}u{text-decoration-line:none}body,button,div,h1,h2,h3,h4,h5,h6,img,p,span,svg,u{font-family:Arial!important}p{font-size:14px}p:blank:before{content:'abc'}div.ql-toolbar.ql-snow{border:none!important;display:inline-block}.ql-container.ql-snow{border:none!important}#editor,#editor2{min-height:60px!important;height:auto} body{margin:auto;max-width:770px} #editor > p {white-space:nowrap} #editor2 > p {white-space:nowrap}"
 
         var htmlPreview = "";
         htmlPreview += "<style>" + style + "</style>" + htmlPreview;
@@ -931,8 +945,14 @@ for (var i = 0; i < elementsWithClass.length; i++) {
             mutations.forEach(function (mutation) {
                 if (mutation.type === 'childList') {
                     var parent = $(mutation.target);
+                   
                     if (parent.find('p').length > 1) {
                         parent.empty();
+                    } else {
+                        var p = $(parent.find('p'));
+                        if (p.text().length > 100) {
+                            p.text(p.text().substring(0,100) )
+                        }
                     }
                 }
             });
@@ -943,6 +963,11 @@ for (var i = 0; i < elementsWithClass.length; i++) {
                     var parent = $(mutation.target);
                     if (parent.find('p').length > 1) {
                         parent.empty();
+                    }else {
+                        var p = $(parent.find('p'));
+                        if (p.text().length > 100) {
+                            p.text(p.text().substring(0,100) )
+                        }
                     }
                 }
             });
