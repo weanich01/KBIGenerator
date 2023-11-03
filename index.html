@@ -445,11 +445,18 @@
         formats: articleFormats
     });
     // need to handle incase character more than 1 line
-    quill.on("text-change", () => {
-
+    quill.on("text-change", (delta, oldDelta, source) => {
+        var text = quill.getText();
+        if (text.length > 100) {
+            quill.setText(oldDelta.ops[0].insert)
+        }
         checkAndreturn($('#editor > .ql-editor')[0])
     });
-    quill2.on("text-change", () => {
+    quill2.on("text-change", (delta, oldDelta, source) => {
+        var text = quill2.getText();
+        if (text.length > 100) {
+            quill2.setText(oldDelta.ops[0].insert)
+        }
         checkAndreturn($('#editor2 > .ql-editor')[0])
     });
     quill3.on("text-change", (delta, oldDelta, source) => {
