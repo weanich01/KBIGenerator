@@ -119,7 +119,6 @@
         }
 
         body {
-            overflow-x: hidden;
             overflow-y: scroll;
         }
 
@@ -291,7 +290,7 @@
             <i class="ti ti-photo"></i>Insert Image Here
         </button>
         <button id="showMockup" class="ql-contextmenu-btn"><i class="ti ti-presentation"></i>Show Mockup</button>
-        <button class="ql-contextmenu-btn"><i class="ti ti-file-export"></i>Generate KBI</button>
+        <button id="generateKbi" class="ql-contextmenu-btn"><i class="ti ti-file-export"></i>Generate KBI</button>
     </div>
     <div id="root"></div>
 </body>
@@ -598,6 +597,57 @@ for (var i = 0; i < elementsWithClass.length; i++) {
         htmlPreview = extractAndConvertImgsToDivs(htmlPreview);
 
         w.document.writeln(htmlPreview);
+
+    });
+
+    $('#generateKbi').click(async function () {
+        var x = "height=800px,width=800px;toolbar=0,location=50,menubar=0";
+        console.log(x);
+
+        $('.ql-contextmenu').hide();
+        //var w = window.open('new.html','_blank');
+        var style = ".thumbnail {text-align:center} .ql-editor{white-space:pre-wrap!important;height:auto;font-family:Arial!important}p:empty:not(:focus)::before{content:attr(data-placeholder)}img{max-width:352px!important;max-height:210px!important;display:block!important;margin-left:auto!important;margin-right:auto!important}.ql-contextmenu{border:2px solid #cacaca;background:#fff;width:auto}.ql-contextmenu-btn{background-color:#fff!important;z-index:10000;width:98%;text-align:left;display:block;font-size:14px;border:none;padding:3px;margin:3px}button.ql-contextmenu-btn:hover{background-color:#e8e8e9!important}.section-header{margin-top:30px;display:inline-block}i{margin-right:5px}.ql-container{height:auto;min-height:200px}#text .correct{border-bottom:2px solid green}#text .misspelled{border-bottom:2px solid red}u{text-decoration-line:none}body,button,div,h1,h2,h3,h4,h5,h6,img,p,span,svg,u{font-family:Arial!important}p{font-size:14px}p:blank:before{content:'abc'}div.ql-toolbar.ql-snow{border:none!important;display:inline-block}.ql-container.ql-snow{border:none!important}#editor,#editor2{min-height:60px!important;height:auto} body{margin:auto;max-width:770px} #editor > p {white-space:nowrap} #editor2 > p {white-space:nowrap}"
+
+        var htmlPreview = "";
+        htmlPreview += "<style>" + style + "</style>" + htmlPreview;
+        htmlPreview += `<script>
+
+// Function to open the full-size image
+function openFullImage(imageSrc) {
+  var newWindow = window.open(imageSrc, '_blank');
+ console.log('call')
+  if (newWindow) {
+    newWindow.focus();
+  } else {
+    alert('Please allow pop-ups for this site to view the full-size image.');
+  }
+}
+
+var elementsWithClass = document.getElementsByClassName('open-image');
+
+// Loop through the elements and assign the click event handler
+for (var i = 0; i < elementsWithClass.length; i++) {
+  elementsWithClass[i].addEventListener('click', function(event) {
+    event.preventDefault(); // Prevent default link behavior for anchor tags
+    openFullImage(this.href || this.src);
+  });
+}
+
+<\/script>`;
+
+        htmlPreview += `<p class="section-header" contenteditable='false'><strong style='color: rgb(178, 107, 0); font-size: 16px;'>Version</strong></p>
+          <div id="editor">${quill.container.firstChild.innerHTML}</div>
+          <p class="section-header" contenteditable='false'><strong style='color: rgb(178, 107, 0); font-size: 16px;'>Date</strong></p>
+          <div id="editor2">${quill2.container.firstChild.innerHTML}</div>
+          <p class="section-header" contenteditable='false'><strong style='color: rgb(178, 107, 0); font-size: 16px;'>Summary</strong></p>
+          <div id="editor3">${quill3.container.firstChild.innerHTML}</div>
+          <p class="section-header" contenteditable='false'><strong style='color: rgb(178, 107, 0); font-size: 16px;'>Technical Background</strong></p>
+          <div id="editor4">${quill4.container.firstChild.innerHTML}</div>
+          <p class="section-header" contenteditable='false'><strong style='color: rgb(178, 107, 0); font-size: 16px;'>Resolution</strong></p>
+          <div id="editor5">${quill5.container.firstChild.innerHTML}</div>`;
+        htmlPreview = extractAndConvertImgsToDivs(htmlPreview);
+
+        await saveTextToFileWithConfirmation(htmlPreview, 'KBI.html');
 
     });
 
@@ -1182,6 +1232,28 @@ for (var i = 0; i < elementsWithClass.length; i++) {
             });
         }
     }
+
+    function saveTextToFileWithConfirmation(text, fileName) {
+        if (window.confirm("Do you want to save this file?")) {
+            // Create a Blob from the text
+            const blob = new Blob([text], { type: 'text/plain' });
+
+            // Create a URL for the Blob
+            const url = window.URL.createObjectURL(blob);
+
+            // Create a link element to trigger the download
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = fileName;
+
+            // Trigger a click event on the link to initiate the download
+            a.click();
+
+            // Release the URL and remove the link element
+            window.URL.revokeObjectURL(url);
+        }
+    }
+
 
     function isNumeric(word) {
         // Use a regular expression to test if the word consists of digits only
