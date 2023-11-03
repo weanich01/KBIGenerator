@@ -394,7 +394,7 @@
         'list',
         'align',
         'direction',
-        // 'image'
+        'image'
         // 'video'
     ];
 
@@ -731,8 +731,8 @@ for (var i = 0; i < elementsWithClass.length; i++) {
                 // Check if the target coordinates are within the bounding box of the element
                 if (event.clientX >= rect.left && event.clientX <= rect.right && event.clientY >= rect.top && event.clientY <= rect.bottom) {
                     // The element with the specified class at the target coordinates is found
-                    console.log('Found element:', imageElements);
-                    targetImageElements = imageElements;
+                    console.log('Found element:', element);
+                    targetImageElements = element;
                     break; // If you want to stop searching after finding the first match
                 }
             }
@@ -1087,9 +1087,9 @@ for (var i = 0; i < elementsWithClass.length; i++) {
         alreadyProcessWords = [];
         removeDivsByClassName(htmlElement.parentElement.id);
         for (let idx = 0; idx < $(p).length; idx++) {
-            if ($($(p)[idx]).find('img').length) {
-                continue;
-            }
+            //if ($($(p)[idx]).find('img').length) {
+            //    continue;
+            //}
             // let text = $(p)[idx].innerText.match(pattern);
             let text = $(p)[idx].innerText.split(/(?<=\s)/);
             var html = $(p)[idx].innerText;
