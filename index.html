@@ -1148,7 +1148,7 @@ for (var i = 0; i < elementsWithClass.length; i++) {
         gg = htmlElement;
         // gg = $(htmlElement).find(p);
         var p = $(htmlElement).find('p');
-        alreadyProcessWords = [];
+        // alreadyProcessWords = [];
         removeDivsByClassName(htmlElement.parentElement.id);
         for (let idx = 0; idx < $(p).length; idx++) {
             //if ($($(p)[idx]).find('img').length) {
@@ -1162,15 +1162,15 @@ for (var i = 0; i < elementsWithClass.length; i++) {
             }
             htmlArray = text.map(function (word) {
                 word = word.trim();
-                if (alreadyProcessWords.includes(word))
-                    return;
+                /// if (alreadyProcessWords.includes(word))
+                //    return;
 
                 var testword = removeNonAlphanumeric(word);
                 var correct = typo.check(testword) || ignoreTextLocal.includes(testword) || isNumeric(testword);
 
                 if (!correct) {
-                    alreadyProcessWords.push(word);
-                    var positions = findAllExactTextPositionsOnScreen(word);
+                    //alreadyProcessWords.push(word);
+                    var positions = findAllExactTextPositionsOnScreen(word, htmlElement);
                     if (positions != null && positions.length > 0) {
                         positions.forEach((position, index) => {
                             createDivAtPositionWithSize(htmlElement.parentElement.id, word, true, position.x, position.y, position.width, position.height);
@@ -1264,8 +1264,8 @@ for (var i = 0; i < elementsWithClass.length; i++) {
         return nonAlphanumericRegex.test(inputString);
     }
 
-    function findAllExactTextPositionsOnScreen(targetText) {
-        let textNodes = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    function findAllExactTextPositionsOnScreen(targetText, parentElement) {
+        let textNodes = document.createTreeWalker(parentElement, NodeFilter.SHOW_TEXT);
         // Escape the targetText for use in a regular expression
         //const escapedText = targetText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         const escapedText = targetText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -1289,13 +1289,24 @@ for (var i = 0; i < elementsWithClass.length; i++) {
                 const clientRects = range.getClientRects();
 
                 if (clientRects.length > 0) {
-                    positions.push({
-                        x: clientRects[0].left + window.scrollX,
-                        y: clientRects[0].top + window.scrollY,
-                        offset: offset,
-                        width: clientRects[0].width,
-                        height: clientRects[0].height,
-                    });
+                    const parentRect = parentElement.getBoundingClientRect();
+                    const textRect = clientRects[0];
+                    // Check if the text is within the boundaries of the parent element
+                    if (
+                        textRect.left >= parentRect.left &&
+                        textRect.right <= parentRect.right &&
+                        textRect.top >= parentRect.top &&
+                        textRect.bottom <= parentRect.bottom
+                    ) {
+                        positions.push({
+                            x: textRect.left + window.scrollX,
+                            y: textRect.top + window.scrollY,
+                            offset: offset,
+                            width: textRect.width,
+                            height: textRect.height,
+                            parentElement: parentElement,
+                        });
+                    }
                 }
             }
         }
