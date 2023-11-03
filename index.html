@@ -445,22 +445,63 @@
     });
     // need to handle incase character more than 1 line
     quill.on("text-change", () => {
+
         checkAndreturn($('#editor > .ql-editor')[0])
     });
     quill2.on("text-change", () => {
         checkAndreturn($('#editor2 > .ql-editor')[0])
     });
-    quill3.on("text-change", () => {
-        checkAndreturn($('#editor3 > .ql-editor')[0])
-        checkAndreturn($('#editor4 > .ql-editor')[0])
-        checkAndreturn($('#editor5 > .ql-editor')[0])
+    quill3.on("text-change", (delta, oldDelta, source) => {
+        if (source === 'user') {
+            delta.ops.forEach(function (op) {
+                if (op.insert && op.insert.image) {
+                    console.log('insert image');
+                    setTimeout(function () {
+                        checkAndreturn($('#editor3 > .ql-editor')[0])
+                        checkAndreturn($('#editor4 > .ql-editor')[0])
+                        checkAndreturn($('#editor5 > .ql-editor')[0])
+                    }, 500);
+                    return;
+                }
+            });
+
+            checkAndreturn($('#editor3 > .ql-editor')[0])
+            checkAndreturn($('#editor4 > .ql-editor')[0])
+            checkAndreturn($('#editor5 > .ql-editor')[0])
+        }
+
     });
-    quill4.on("text-change", () => {
-        checkAndreturn($('#editor4 > .ql-editor')[0])
-        checkAndreturn($('#editor5 > .ql-editor')[0])
+    quill4.on("text-change", (delta, oldDelta, source) => {
+         if (source === 'user') {
+            delta.ops.forEach(function (op) {
+                if (op.insert && op.insert.image) {
+                    console.log('insert image');
+                    setTimeout(function () {
+                        checkAndreturn($('#editor3 > .ql-editor')[0])
+                        checkAndreturn($('#editor4 > .ql-editor')[0])
+                    }, 500);
+                    return;
+                }
+            });
+
+            checkAndreturn($('#editor4 > .ql-editor')[0])
+            checkAndreturn($('#editor5 > .ql-editor')[0])
+        }
     });
-    quill5.on("text-change", () => {
-        checkAndreturn($('#editor5 > .ql-editor')[0])
+    quill5.on("text-change", (delta, oldDelta, source) => {
+         if (source === 'user') {
+            delta.ops.forEach(function (op) {
+                if (op.insert && op.insert.image) {
+                    console.log('insert image');
+                    setTimeout(function () {
+                        checkAndreturn($('#editor5 > .ql-editor')[0])
+                    }, 500);
+                    return;
+                }
+            });
+
+            checkAndreturn($('#editor5 > .ql-editor')[0])
+        }
     });
     //   WEBSPELLCHECKER.init({
     //	container: quill.root
@@ -652,6 +693,7 @@ for (var i = 0; i < elementsWithClass.length; i++) {
         }
         if (tempState == 'editor5') {
             $(quill5.getModule('toolbar').controls[0][1]).click()
+
         }
     }
 
@@ -1077,9 +1119,9 @@ for (var i = 0; i < elementsWithClass.length; i++) {
     }
 
     var gg;
-    var alreadyProcessWords = [];
-    function spellcheck(htmlElement) {
 
+    function spellcheck(htmlElement) {
+        var alreadyProcessWords = [];
         const pattern = /\S+/g;
         gg = htmlElement;
         // gg = $(htmlElement).find(p);
@@ -1318,6 +1360,11 @@ for (var i = 0; i < elementsWithClass.length; i++) {
     function deleteImage(event) {
         let targetElement = event.data.targetElement;
         $(targetElement).remove();
+        checkAndreturn($('#editor > .ql-editor')[0]);
+        checkAndreturn($('#editor2 > .ql-editor')[0]);
+        checkAndreturn($('#editor3 > .ql-editor')[0]);
+        checkAndreturn($('#editor4 > .ql-editor')[0]);
+        checkAndreturn($('#editor5 > .ql-editor')[0]);
         $('.ql-contextmenu').hide();
     }
 
