@@ -1037,22 +1037,22 @@ for (var i = 0; i < elementsWithClass.length; i++) {
 
     function checkAndreturn(htmlElement) {
         //get current cursor position
-        const sel = window.getSelection();
-        const node = sel.focusNode;
-        const offset = sel.focusOffset;
-        const pos = getCursorPosition(htmlElement, node, offset, { pos: 0, done: false });
-        if (offset === 0) pos.pos += 0.5;
+        //const sel = window.getSelection();
+        //const node = sel.focusNode;
+        //const offset = sel.focusOffset;
+        //const pos = getCursorPosition(htmlElement, node, offset, { pos: 0, done: false });
+        //if (offset === 0) pos.pos += 0.5;
 
         spellcheck(htmlElement);
 
         // restore the position
-        sel.removeAllRanges();
-        const range = setCursorPosition(htmlElement, document.createRange(), {
-            pos: pos.pos,
-            done: false,
-        });
-        range.collapse(true);
-        sel.addRange(range);
+        //sel.removeAllRanges();
+        //const range = setCursorPosition(htmlElement, document.createRange(), {
+        //    pos: pos.pos,
+        //    done: false,
+        //});
+        //range.collapse(true);
+        //sel.addRange(range);
     }
     // get the cursor position from .editor start
     function getCursorPosition(parent, node, offset, stat) {
