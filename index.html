@@ -1074,13 +1074,14 @@ for (var i = 0; i < elementsWithClass.length; i++) {
     }
 
     var gg;
+    var alreadyProcessWords = [];
     function spellcheck(htmlElement) {
 
         const pattern = /\S+/g;
         gg = htmlElement;
         // gg = $(htmlElement).find(p);
         var p = $(htmlElement).find('p');
-
+        alreadyProcessWords = [];
         removeDivsByClassName(htmlElement.parentElement.id);
         for (let idx = 0; idx < $(p).length; idx++) {
             if ($($(p)[idx]).find('img').length) {
@@ -1098,7 +1099,8 @@ for (var i = 0; i < elementsWithClass.length; i++) {
                 var correct = typo.check(testword) || ignoreTextLocal.includes(testword);
                 var className = correct ? 'border-bottom: 2px solid green;' : 'text-decoration-line: none;border-bottom: 2px solid red;';
 
-                if (!correct) {
+                if (!correct && !alreadyProcessWords.includes(word) ) {
+                    alreadyProcessWords.push(word);
                     var positions = findAllExactTextPositionsOnScreen(word);
                     if (positions != null && positions.length > 0) {
                         positions.forEach((position, index) => {
