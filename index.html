@@ -120,7 +120,7 @@
 
         body {
             overflow-x: hidden;
-            overflow-y:scroll;
+            overflow-y: scroll;
         }
 
         p {
@@ -448,14 +448,28 @@
     quill.on("text-change", (delta, oldDelta, source) => {
         var text = quill.getText();
         if (text.length > 100) {
-            quill.setText(oldDelta.ops[0].insert)
+            let restrictValue = '';
+            for (let i = 0; i < oldDelta.ops.length; i++) {
+                if (oldDelta.ops[i].insert != null) {
+                    restrictValue += oldDelta.ops[i].insert;
+                }
+            }
+
+            quill.setText(restrictValue.substring(0, 99))
         }
         checkAndreturn($('#editor > .ql-editor')[0])
     });
     quill2.on("text-change", (delta, oldDelta, source) => {
         var text = quill2.getText();
         if (text.length > 100) {
-            quill2.setText(oldDelta.ops[0].insert)
+            let restrictValue = '';
+            for (let i = 0; i < oldDelta.ops.length; i++) {
+                if (oldDelta.ops[i].insert != null) {
+                    restrictValue += oldDelta.ops[i].insert;
+                }
+            }
+
+            quill2.setText(restrictValue.substring(0, 99))
         }
         checkAndreturn($('#editor2 > .ql-editor')[0])
     });
@@ -480,7 +494,7 @@
 
     });
     quill4.on("text-change", (delta, oldDelta, source) => {
-         if (source === 'user') {
+        if (source === 'user') {
             delta.ops.forEach(function (op) {
                 if (op.insert && op.insert.image) {
                     console.log('insert image');
@@ -497,7 +511,7 @@
         }
     });
     quill5.on("text-change", (delta, oldDelta, source) => {
-         if (source === 'user') {
+        if (source === 'user') {
             delta.ops.forEach(function (op) {
                 if (op.insert && op.insert.image) {
                     console.log('insert image');
