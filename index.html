@@ -118,6 +118,10 @@
             font-family: Arial !important;
         }
 
+        body {
+            overflow:hidden;
+        }
+
         p {
             font-size: 14px;
         }
@@ -208,8 +212,9 @@
             white-space: pre-wrap !important;
         }*/
 
-        #editor > .ql-editor, #editor2 > .ql-editor{
-            white-space:nowrap!important
+        #editor > .ql-editor, #editor2 > .ql-editor {
+            white-space: nowrap !important;
+            overflow: hidden;
         }
     </style>
     <!-- Create the editor container -->
@@ -660,13 +665,11 @@ for (var i = 0; i < elementsWithClass.length; i++) {
 
             $('#insertImage').show();
             if (document.getElementById('editor').contains(event.target)) {
-                //tempState = 'editor';
-                tempState = '';
+               tempState = 'editor';
                 $('#insertImage').hide();
             }
             else if (document.getElementById('editor2').contains(event.target)) {
-                //tempState = 'editor2';
-                tempState = '';
+                tempState = 'editor2';
                 $('#insertImage').hide();
             }
             else if (document.getElementById('editor3').contains(event.target)) {
@@ -945,13 +948,13 @@ for (var i = 0; i < elementsWithClass.length; i++) {
             mutations.forEach(function (mutation) {
                 if (mutation.type === 'childList') {
                     var parent = $(mutation.target);
-                   
+
                     if (parent.find('p').length > 1) {
                         parent.empty();
                     } else {
                         var p = $(parent.find('p'));
                         if (p.text().length > 100) {
-                            p.text(p.text().substring(0,100) )
+                            p.text(p.text().substring(0, 100))
                         }
                     }
                 }
@@ -963,10 +966,10 @@ for (var i = 0; i < elementsWithClass.length; i++) {
                     var parent = $(mutation.target);
                     if (parent.find('p').length > 1) {
                         parent.empty();
-                    }else {
+                    } else {
                         var p = $(parent.find('p'));
                         if (p.text().length > 100) {
-                            p.text(p.text().substring(0,100) )
+                            p.text(p.text().substring(0, 100))
                         }
                     }
                 }
@@ -1095,11 +1098,13 @@ for (var i = 0; i < elementsWithClass.length; i++) {
             }
             htmlArray = text.map(function (word) {
                 word = word.trim();
+                if (alreadyProcessWords.includes(word))
+                    return;
+
                 var testword = removeNonAlphanumeric(word);
                 var correct = typo.check(testword) || ignoreTextLocal.includes(testword);
-                var className = correct ? 'border-bottom: 2px solid green;' : 'text-decoration-line: none;border-bottom: 2px solid red;';
 
-                if (!correct && !alreadyProcessWords.includes(word) ) {
+                if (!correct) {
                     alreadyProcessWords.push(word);
                     var positions = findAllExactTextPositionsOnScreen(word);
                     if (positions != null && positions.length > 0) {
@@ -1108,7 +1113,7 @@ for (var i = 0; i < elementsWithClass.length; i++) {
                         });
                     }
                 }
-                return `<u style="${className}">${word.trim()}</u>`;
+
 
             });
         }
