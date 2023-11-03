@@ -119,7 +119,7 @@
         }
 
         body {
-            overflow:hidden;
+            overflow: hidden;
         }
 
         p {
@@ -665,7 +665,7 @@ for (var i = 0; i < elementsWithClass.length; i++) {
 
             $('#insertImage').show();
             if (document.getElementById('editor').contains(event.target)) {
-               tempState = 'editor';
+                tempState = 'editor';
                 $('#insertImage').hide();
             }
             else if (document.getElementById('editor2').contains(event.target)) {
@@ -1102,7 +1102,7 @@ for (var i = 0; i < elementsWithClass.length; i++) {
                     return;
 
                 var testword = removeNonAlphanumeric(word);
-                var correct = typo.check(testword) || ignoreTextLocal.includes(testword);
+                var correct = typo.check(testword) || ignoreTextLocal.includes(testword) || isNumeric(testword);
 
                 if (!correct) {
                     alreadyProcessWords.push(word);
@@ -1117,6 +1117,11 @@ for (var i = 0; i < elementsWithClass.length; i++) {
 
             });
         }
+    }
+
+    function isNumeric(word) {
+        // Use a regular expression to test if the word consists of digits only
+        return /^\d+$/.test(word);
     }
 
     function removeNonAlphanumeric(inputString) {
