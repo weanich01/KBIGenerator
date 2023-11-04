@@ -444,8 +444,17 @@
         formats: articleFormats
     });
     // need to handle incase character more than 1 line
+    var quill1LastText = "";
     quill.on("text-change", (delta, oldDelta, source) => {
         var text = quill.getText();
+        if (hasOneCharDifference(quill1LastText, quill.getText())) {
+            if (!isWhitespace(getLatestCharacterWithoutNewline(quill.getText()))) {
+                if (quill.getSelection().index == quill.getText().length - 1)
+                    quill1LastText = quill.getText();
+                return;
+            }
+        }
+        quill1LastText = quill.getText();
         if (text.length > 100) {
             let restrictValue = '';
             for (let i = 0; i < oldDelta.ops.length; i++) {
@@ -458,8 +467,18 @@
         }
         checkAndreturn($('#editor > .ql-editor')[0])
     });
+
+    var quill2LastText = "";
     quill2.on("text-change", (delta, oldDelta, source) => {
         var text = quill2.getText();
+        if (hasOneCharDifference(quill2LastText, quill2.getText())) {
+            if (!isWhitespace(getLatestCharacterWithoutNewline(quill2.getText()))) {
+                if (quill2.getSelection().index == quill2.getText().length - 1)
+                    quill2LastText = quill2.getText();
+                return;
+            }
+        }
+        quill2LastText = quill2.getText();
         if (text.length > 100) {
             let restrictValue = '';
             for (let i = 0; i < oldDelta.ops.length; i++) {
@@ -472,7 +491,19 @@
         }
         checkAndreturn($('#editor2 > .ql-editor')[0])
     });
+
+
+    var quill3LastText = "";
     quill3.on("text-change", (delta, oldDelta, source) => {
+        var text = quill3.getText();
+        if (hasOneCharDifference(quill3LastText, quill3.getText())) {
+            if (!isWhitespace(getLatestCharacterWithoutNewline(quill3.getText()))) {
+                if (quill3.getSelection().index == quill3.getText().length - 1)
+                    quill3LastText = quill3.getText();
+                return;
+            }
+        }
+        quill3LastText = quill3.getText();
         if (source === 'user') {
             delta.ops.forEach(function (op) {
                 if (op.insert && op.insert.image) {
@@ -492,7 +523,18 @@
         }
 
     });
+
+    var quill4LastText = ""
     quill4.on("text-change", (delta, oldDelta, source) => {
+        var text = quill4.getText();
+        if (hasOneCharDifference(quill4LastText, quill4.getText())) {
+            if (!isWhitespace(getLatestCharacterWithoutNewline(quill4.getText()))) {
+                if (quill4.getSelection().index == quill4.getText().length - 1)
+                    quill4LastText = quill4.getText();
+                return;
+            }
+        }
+        quill4LastText = quill4.getText();
         if (source === 'user') {
             delta.ops.forEach(function (op) {
                 if (op.insert && op.insert.image) {
@@ -509,7 +551,18 @@
             checkAndreturn($('#editor5 > .ql-editor')[0])
         }
     });
+
+    var quill5LastText = "";
     quill5.on("text-change", (delta, oldDelta, source) => {
+         var text = quill5.getText();
+        if (hasOneCharDifference(quill5LastText, quill5.getText())) {
+            if (!isWhitespace(getLatestCharacterWithoutNewline(quill5.getText()))) {
+                if (quill5.getSelection().index == quill5.getText().length - 1)
+                    quill5LastText = quill5.getText();
+                return;
+            }
+        }
+        quill5LastText = quill5.getText();
         if (source === 'user') {
             delta.ops.forEach(function (op) {
                 if (op.insert && op.insert.image) {
@@ -533,6 +586,42 @@
     });
     for (item of document.getElementsByClassName('ql-image')) {
         $(item).hide()
+    }
+
+    function getLatestCharacterWithoutNewline(text) {
+        // Remove trailing newline characters
+        text = text.replace(/\n+$/, '');
+
+        // Get the last character
+        const lastCharacter = text.slice(-1);
+
+        return lastCharacter;
+    }
+
+    function findSingleCharDifference(text1, text2) {
+        if (text1.length !== text2.length) {
+            return null; // Different lengths, can't have a single character difference.
+        }
+
+        for (let i = 0; i < text1.length; i++) {
+            if (text1[i] !== text2[i]) {
+                if (i + 1 === text1.length) {
+                    return text2[i];
+                } else {
+                    return null; // More than one character difference.
+                }
+            }
+        }
+
+        return null; // No difference found.
+    }
+
+    function hasOneCharDifference(text1, text2) {
+        if (Math.abs(text1.length - text2.length) == 1) {
+            return true; // Different lengths, there must be more than one character difference.
+        } else {
+            return false;
+        }
     }
 
     //Sapling.init({
@@ -578,7 +667,7 @@ var elementsWithClass = document.getElementsByClassName('open-image');
 for (var i = 0; i < elementsWithClass.length; i++) {
   elementsWithClass[i].addEventListener('click', function(event) {
     event.preventDefault(); // Prevent default link behavior for anchor tags
-    openFullImage(this.href || this.src);
+    openImageInNewTab(this.href || this.src);
   });
 }
 
@@ -612,15 +701,11 @@ for (var i = 0; i < elementsWithClass.length; i++) {
         htmlPreview += "<style>" + style + "</style>" + htmlPreview;
         htmlPreview += `<script>
 
-// Function to open the full-size image
-function openFullImage(imageSrc) {
-  var newWindow = window.open(imageSrc, '_blank');
- console.log('call')
-  if (newWindow) {
-    newWindow.focus();
-  } else {
-    alert('Please allow pop-ups for this site to view the full-size image.');
-  }
+
+function openImageInNewTab(XXXX) {
+  const newTab = window.open();
+console.log(XXXX);
+  newTab.document.write(<img src= XXX >);
 }
 
 var elementsWithClass = document.getElementsByClassName('open-image');
@@ -629,7 +714,8 @@ var elementsWithClass = document.getElementsByClassName('open-image');
 for (var i = 0; i < elementsWithClass.length; i++) {
   elementsWithClass[i].addEventListener('click', function(event) {
     event.preventDefault(); // Prevent default link behavior for anchor tags
-    openFullImage(this.href || this.src);
+    console.log(this);
+    openImageInNewTab(this.href || this.src);
   });
 }
 
@@ -674,6 +760,14 @@ for (var i = 0; i < elementsWithClass.length; i++) {
     //    xhr.send(fd);
 
     //});
+    function isWhitespace(char) {
+        return char.trim() === '';
+    }
+
+    function endsWithWhitespaceAndNewline(text) {
+        const regex = /\s+\n$/;
+        return regex.test(text);
+    }
 
     function selectLocalImage() {
         const input = document.createElement('input');
@@ -1113,7 +1207,8 @@ for (var i = 0; i < elementsWithClass.length; i++) {
         //const offset = sel.focusOffset;
         //const pos = getCursorPosition(htmlElement, node, offset, { pos: 0, done: false });
         //if (offset === 0) pos.pos += 0.5;
-
+        gg = htmlElement;
+        console.log($(htmlElement).parent());
         spellcheck(htmlElement);
 
         // restore the position
@@ -1491,11 +1586,11 @@ for (var i = 0; i < elementsWithClass.length; i++) {
             imgLink.href = imgElement.src;
             imgLink.target = '_blank';
             imgLink.rel = 'noopener';
-            imgLink.className += " open-image";
+            imgLink.className += "open-image";
             // Clone the img element and add the "async" attribute
             var clonedImg = imgElement.cloneNode(true);
             clonedImg.setAttribute('decoding', 'async');
-            clonedImg.className += " open-image";
+            clonedImg.className += "open-image";
             // Create the "internalimage" anchor tag
             var internalLink = document.createElement('a');
             internalLink.className = 'internalimage';
@@ -1503,7 +1598,7 @@ for (var i = 0; i < elementsWithClass.length; i++) {
             internalLink.target = '_blank';
             internalLink.rel = 'noopener';
             internalLink.textContent = 'Click For Full Size';
-            internalLink.className += " open-image";
+            internalLink.className += "open-image";
             // Append elements to the divElement
             imgLink.appendChild(clonedImg);
             divElement.appendChild(imgLink);
