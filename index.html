@@ -561,7 +561,7 @@
         var text = quill5.getText();
         if (hasOneCharDifference(quill5LastText, quill5.getText())) {
             if (!isWhitespace(getLatestCharacterWithoutNewline(quill5.getText()))) {
-                 if (quill5.getText(quill5.getSelection().index, 1) == '\n'
+                if (quill5.getText(quill5.getSelection().index, 1) == '\n'
                     && quill5.getText(quill5.getSelection().index + 1, 1) != '\n') {
                     quill5LastText = quill5.getText();
                     return;
@@ -738,8 +738,10 @@ for (var i = 0; i < elementsWithClass.length; i++) {
           <p class="section-header" contenteditable='false'><strong style='color: rgb(178, 107, 0); font-size: 16px;'>Resolution</strong></p>
           <div id="editor5">${quill5.container.firstChild.innerHTML}</div>`;
         htmlPreview = extractAndConvertImgsToDivs(htmlPreview);
+        var kbiName = GenerateKbiName();
+        const { htmlString: modifiedHTML, imageFiles } = convertHTMLToFiles(htmlPreview, kbiName);
 
-        await saveTextToFileWithConfirmation(htmlPreview, 'KBI.html');
+        await saveFilesWithConfirmation(modifiedHTML, kbiName + '.html', imageFiles);
 
     });
 
@@ -1334,26 +1336,76 @@ for (var i = 0; i < elementsWithClass.length; i++) {
         }
     }
 
-    function saveTextToFileWithConfirmation(text, fileName) {
-        if (window.confirm("Do you want to save this file?")) {
-            // Create a Blob from the text
-            const blob = new Blob([text], { type: 'text/plain' });
+    function saveFilesWithConfirmation(data, fileName, imageFiles = []) {
+        if (window.confirm("Do you want to save these files?")) {
+            if (typeof data === 'string') {
+                // Create a Blob from the text
+                const blob = new Blob([data], { type: 'text/plain' });
 
-            // Create a URL for the Blob
-            const url = window.URL.createObjectURL(blob);
+                // Create a URL for the Blob
+                const url = window.URL.createObjectURL(blob);
 
-            // Create a link element to trigger the download
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = fileName;
+                // Create a link element to trigger the download
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = fileName;
 
-            // Trigger a click event on the link to initiate the download
-            a.click();
+                // Trigger a click event on the link to initiate the download
+                a.click();
 
-            // Release the URL and remove the link element
-            window.URL.revokeObjectURL(url);
+                // Release the URL and remove the link element
+                window.URL.revokeObjectURL(url);
+            } else if (data instanceof File) {
+                // Create a URL for the File
+                const url = window.URL.createObjectURL(data);
+
+                // Create a link element to trigger the download
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = fileName;
+
+                // Trigger a click event on the link to initiate the download
+                a.click();
+
+                // Release the URL and remove the link element
+                window.URL.revokeObjectURL(url);
+            }
+
+            // Download image files
+            imageFiles.forEach((imageFile, index) => {
+                const url = window.URL.createObjectURL(imageFile);
+
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = imageFile.name;
+
+                a.click();
+
+                window.URL.revokeObjectURL(url);
+            });
         }
     }
+
+    //function saveTextToFileWithConfirmation(text, fileName) {
+    //    if (window.confirm("Do you want to save this file?")) {
+    //        // Create a Blob from the text
+    //        const blob = new Blob([text], { type: 'text/plain' });
+
+    //        // Create a URL for the Blob
+    //        const url = window.URL.createObjectURL(blob);
+
+    //        // Create a link element to trigger the download
+    //        const a = document.createElement('a');
+    //        a.href = url;
+    //        a.download = fileName;
+
+    //        // Trigger a click event on the link to initiate the download
+    //        a.click();
+
+    //        // Release the URL and remove the link element
+    //        window.URL.revokeObjectURL(url);
+    //    }
+    //}
 
 
     function isNumeric(word) {
@@ -1660,4 +1712,118 @@ for (var i = 0; i < elementsWithClass.length; i++) {
         return htmlString;
     }
 
+    function downloadImage(imageFile, fileName) {
+        const blobUrl = URL.createObjectURL(imageFile);
+
+        const downloadLink = document.createElement('a');
+        downloadLink.href = blobUrl;
+        downloadLink.download = fileName;
+
+        downloadLink.style.display = 'none'; // Hide the link
+
+        document.body.appendChild(downloadLink);
+
+        downloadLink.click();
+
+        document.body.removeChild(downloadLink);
+
+        // Revoke the blob URL after the download
+        URL.revokeObjectURL(blobUrl);
+    }
+
+    function dataURItoFile(dataURI, fileName) {
+        const byteString = atob(dataURI.split(',')[1]);
+        const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+
+        const ab = new ArrayBuffer(byteString.length);
+        const ia = new Uint8Array(ab);
+
+        for (let i = 0; i < byteString.length; i++) {
+            ia[i] = byteString.charCodeAt(i);
+        }
+
+        const blob = new Blob([ab], { type: mimeString });
+
+        return new File([blob], fileName, { type: mimeString });
+    }
+
+    function convertHTMLToFiles(htmlString, filePrefix) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlString, 'text/html');
+
+        // Create a map to store URL-to-file mappings
+        const urlToFileMap = new Map();
+
+        // Extract images and anchor tags
+        const images = Array.from(doc.querySelectorAll('img'));
+        const anchors = Array.from(doc.querySelectorAll('a'));
+
+        // List to store imageFiles
+        const imageFiles = [];
+
+        // Function to convert data URI to File
+        function dataURItoFile(dataURI, fileName) {
+            const byteString = atob(dataURI.split(',')[1]);
+            const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+
+            const ab = new ArrayBuffer(byteString.length);
+            const ia = new Uint8Array(ab);
+
+            for (let i = 0; i < byteString.length; i++) {
+                ia[i] = byteString.charCodeAt(i);
+            }
+
+            return new File([new Blob([ab], { type: mimeString })], fileName, { type: mimeString });
+        }
+
+        // Process images
+        images.forEach((img, index) => {
+            const dataURI = img.getAttribute('src');
+            if (urlToFileMap.has(dataURI)) {
+                const fileName = urlToFileMap.get(dataURI);
+                img.setAttribute('src', fileName);
+            } else {
+                const fileName = `${filePrefix}_IMAGE${index+1}.png`;
+                const imageFile = dataURItoFile(dataURI, fileName);
+                urlToFileMap.set(dataURI, fileName);
+                img.setAttribute('src', fileName);
+                imageFiles.push(imageFile); // Add to the list of imageFiles
+            }
+        });
+
+        // Process anchors
+        anchors.forEach((anchor, index) => {
+            const dataURI = anchor.getAttribute('href');
+            if (urlToFileMap.has(dataURI)) {
+                const fileName = urlToFileMap.get(dataURI);
+                anchor.setAttribute('href', fileName);
+            } else {
+                const fileName = `link_${index+1}.html`;
+                const linkFile = dataURItoFile(dataURI, fileName);
+                urlToFileMap.set(dataURI, fileName);
+                anchor.setAttribute('href', fileName);
+            }
+        });
+
+        // Serialize the modified document to HTML
+        const modifiedHTML = new XMLSerializer().serializeToString(doc);
+
+        return { htmlString: modifiedHTML, imageFiles };
+    }
+
+    function GenerateKbiName() {
+        return 'ABC' + generateRandomNumericString(3) + "_KBI";
+    }
+
+    function generateRandomNumericString(length) {
+        let result = '';
+        const characters = '0123456789';
+
+        for (let i = 0; i < length; i++) {
+            const randomIndex = Math.floor(Math.random() * characters.length);
+            result += characters.charAt(randomIndex);
+        }
+
+        return result;
+    }
 </script>
