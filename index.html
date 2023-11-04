@@ -449,7 +449,7 @@
         var text = quill.getText();
         if (hasOneCharDifference(quill1LastText, quill.getText())) {
             if (!isWhitespace(getLatestCharacterWithoutNewline(quill.getText()))) {
-                if (quill.getSelection().index == quill.getText().length - 1)
+                if (quill.getText(quill.getSelection().index, 1) == '\n')
                     quill1LastText = quill.getText();
                 return;
             }
@@ -473,7 +473,7 @@
         var text = quill2.getText();
         if (hasOneCharDifference(quill2LastText, quill2.getText())) {
             if (!isWhitespace(getLatestCharacterWithoutNewline(quill2.getText()))) {
-                if (quill2.getSelection().index == quill2.getText().length - 1)
+                if (quill2.getText(quill2.getSelection().index, 1) == '\n')
                     quill2LastText = quill2.getText();
                 return;
             }
@@ -498,9 +498,11 @@
         var text = quill3.getText();
         if (hasOneCharDifference(quill3LastText, quill3.getText())) {
             if (!isWhitespace(getLatestCharacterWithoutNewline(quill3.getText()))) {
-                if (quill3.getSelection().index == quill3.getText().length - 1)
+                if (quill3.getText(quill3.getSelection().index, 1) == '\n'
+                    && quill3.getText(quill3.getSelection().index + 1, 1) != '\n') {
                     quill3LastText = quill3.getText();
-                return;
+                    return;
+                }
             }
         }
         quill3LastText = quill3.getText();
@@ -529,9 +531,11 @@
         var text = quill4.getText();
         if (hasOneCharDifference(quill4LastText, quill4.getText())) {
             if (!isWhitespace(getLatestCharacterWithoutNewline(quill4.getText()))) {
-                if (quill4.getSelection().index == quill4.getText().length - 1)
+                if (quill4.getText(quill4.getSelection().index, 1) == '\n'
+                    && quill4.getText(quill4.getSelection().index + 1, 1) != '\n') {
                     quill4LastText = quill4.getText();
-                return;
+                    return;
+                }
             }
         }
         quill4LastText = quill4.getText();
@@ -554,12 +558,14 @@
 
     var quill5LastText = "";
     quill5.on("text-change", (delta, oldDelta, source) => {
-         var text = quill5.getText();
+        var text = quill5.getText();
         if (hasOneCharDifference(quill5LastText, quill5.getText())) {
             if (!isWhitespace(getLatestCharacterWithoutNewline(quill5.getText()))) {
-                if (quill5.getSelection().index == quill5.getText().length - 1)
+                 if (quill5.getText(quill5.getSelection().index, 1) == '\n'
+                    && quill5.getText(quill5.getSelection().index + 1, 1) != '\n') {
                     quill5LastText = quill5.getText();
-                return;
+                    return;
+                }
             }
         }
         quill5LastText = quill5.getText();
