@@ -357,9 +357,7 @@
 
     
 
-    const currentDate = new Date();
-    const formattedDate = formatDate(currentDate);
-    quill.setText(formattedDate);
+   
     quill.getModule('keyboard').bindings[13] = null;
     var quill2 = new Quill('#editor2', {
         modules: {
@@ -369,6 +367,10 @@
         theme: 'snow',
         formats: textFormats
     });
+
+     const currentDate = new Date();
+    const formattedDate = formatDate(currentDate);
+    quill.setText(formattedDate);
     quill2.getModule('keyboard').bindings[13] = null;
     var quill3 = new Quill('#editor3', {
         modules: {
