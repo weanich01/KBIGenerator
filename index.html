@@ -354,6 +354,12 @@
         theme: 'snow',
         formats: textFormats
     });
+
+    
+
+    const currentDate = new Date();
+    const formattedDate = formatDate(currentDate);
+    quill.setText(formattedDate);
     quill.getModule('keyboard').bindings[13] = null;
     var quill2 = new Quill('#editor2', {
         modules: {
@@ -1730,7 +1736,7 @@ for (var i = 0; i < elementsWithClass.length; i++) {
                 const fileName = urlToFileMap.get(dataURI);
                 img.setAttribute('src', fileName);
             } else {
-                const fileName = `${filePrefix}_IMAGE${index+1}.png`;
+                const fileName = `${filePrefix}_IMAGE${index + 1}.png`;
                 const imageFile = dataURItoFile(dataURI, fileName);
                 urlToFileMap.set(dataURI, fileName);
                 img.setAttribute('src', fileName);
@@ -1745,7 +1751,7 @@ for (var i = 0; i < elementsWithClass.length; i++) {
                 const fileName = urlToFileMap.get(dataURI);
                 anchor.setAttribute('href', fileName);
             } else {
-                const fileName = `link_${index+1}.html`;
+                const fileName = `link_${index + 1}.html`;
                 const linkFile = dataURItoFile(dataURI, fileName);
                 urlToFileMap.set(dataURI, fileName);
                 anchor.setAttribute('href', fileName);
@@ -1772,5 +1778,17 @@ for (var i = 0; i < elementsWithClass.length; i++) {
         }
 
         return result;
+    }
+
+    function formatDate(date) {
+        const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+        const day = daysOfWeek[date.getDay()];
+        const dayOfMonth = date.getDate();
+        const month = months[date.getMonth()];
+        const year = date.getFullYear();
+
+        return `${day}, ${dayOfMonth} ${month} ${year}`;
     }
 </script>
