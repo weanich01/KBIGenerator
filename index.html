@@ -693,7 +693,7 @@ for (var i = 0; i < elementsWithClass.length; i++) {
         htmlPreview = htmlPreview + htmlContent + '<\/body><\/html>';
         let { htmlString: modifiedHTML, imageFiles } = convertHTMLToFiles(htmlPreview, kbiName);
         modifiedHTML = modifiedHTML.replaceAll(' &gt; p', ' > p');
-        modifiedHTML = modifiedHTML.replaceAll('<br />', '<br>');
+        modifiedHTML = modifiedHTML.replaceAll('<br />', '<br>'); // 
         await saveFilesWithConfirmation(modifiedHTML, kbiName + '.html', imageFiles);
 
     });
